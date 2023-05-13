@@ -1,3 +1,5 @@
 plugged/
 site/
 lua/packer.nvim/
+pack/
+plugin/
