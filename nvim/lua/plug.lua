@@ -28,6 +28,7 @@ return require('packer').startup(function(use)
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
     "mfussenegger/nvim-lint",
+    "github/copilot.vim",
 
     --- THEMES -> Start -------
     'phha/zenburn.nvim',
