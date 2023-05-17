@@ -46,15 +46,24 @@ return require('packer').startup(function(use)
 
   }
 
+  use({
+    "L3MON4D3/LuaSnip",
+    -- follow latest release.
+    tag = "v<CurrentMajor>.*", -- Replace <CurrentMajor> by the latest released major (first number of latest release)
+    -- install jsregexp (optional!:).
+    run = "make install_jsregexp"
+  })
+
   --- dependencies for auto suggestion ----
   use {
     'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-buffer',
-    'hrsh7th/cmp-path',
-    'hrsh7th/cmp-cmdline',
     'hrsh7th/nvim-cmp',
-    'hrsh7th/cmp-vsnip',
-    'hrsh7th/vim-vsnip'
+    --'hrsh7th/cmp-buffer',
+    --'hrsh7th/cmp-path',
+    --'hrsh7th/cmp-cmdline',
+    --'hrsh7th/cmp-vsnip',
+    --'hrsh7th/vim-vsnip',
+    'rafamadriz/friendly-snippets'
   }
 
   use {
