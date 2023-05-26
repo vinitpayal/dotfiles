@@ -116,7 +116,7 @@ font:
     family: FiraCode Nerd Font
     style: 'Medium'
   italic:
-    family: FiraCode Nerd Font Propo
+    family: FiraCode Nerd Font
     # The `style` can be specified to pick a specific face.
     #style: mono
     # Bold font face
