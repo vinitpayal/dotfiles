@@ -103,6 +103,12 @@ env:
 font:
   # Normal (roman) font face
   size: 14.0
+  offset:
+    x: 0
+    y: 3
+  glyph_offset:
+    x: 1
+    y: 2
   normal:
     family: FiraCode Nerd Font
     style: 'Regular'
@@ -145,15 +151,9 @@ font:
     # Offset is the extra space around each character. `offset.y` can be thought
     # of as modifying the line spacing, and `offset.x` as modifying the letter
     # spacing.
-    offset:
-      x: 2
-      y: 2
     # Glyph offset determines the locations of the glyphs within their cells with
     # the default being at the bottom. Increasing `x` moves the glyph to the
-    # right, increasing `y` moves the glyph upward.
-    glyph_offset:
-      x: 2
-      y: 3
+    # right, increasing `y` moves the glyph upward. 
     # Use built-in font for box drawing characters.
     #
     # If `true`, Alacritty will use a custom built-in font for box drawing
