@@ -64,19 +64,19 @@ require("lspconfig").sqlls.setup { capabilities = capablities }
 require("lspconfig").bashls.setup { capabilities = capablities }
 require("lspconfig").jsonls.setup { capabilities = capablities }
 
-require('lint').linters_by_ft = {
-  markdown = { 'vale' },
-  javascript = { 'eslint_d' },
-  typescript = { 'eslint_d' },
-  python = { 'pylint' },
-  sql = { 'sqlfluff' },
-  sh = { 'shellcheck' },
-  json = { 'jsonlint' },
-  yaml = { 'yamllint' },
-  dockerfile = { 'hadolint' },
-  dockercompose = { 'hadolint' },
-  lua = { 'luacheck' }
-}
+--require('lint').linters_by_ft = {
+--  markdown = { 'vale' },
+--  javascript = { 'eslint_d' },
+--  typescript = { 'eslint_d' },
+--  python = { 'pylint' },
+--  sql = { 'sqlfluff' },
+--  sh = { 'shellcheck' },
+--  json = { 'jsonlint' },
+--  yaml = { 'yamllint' },
+--  dockerfile = { 'hadolint' },
+--  dockercompose = { 'hadolint' },
+--  lua = { 'luacheck' }
+--}
 
 --vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 --  callback = function()
