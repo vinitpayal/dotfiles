@@ -2,7 +2,6 @@
 local builtin = require('telescope.builtin')
 
 vim.api.nvim_set_keymap('t', '<C-t>', '<C-\\><C-n>CR>', { noremap = true, silent = true })
-vim.g.floaterm_autoinsert = 0
 
 local wk = require("which-key")
 wk.register({
