@@ -2,34 +2,49 @@
 local builtin = require('telescope.builtin')
 
 vim.api.nvim_set_keymap('t', '<C-t>', '<C-\\><C-n>CR>', { noremap = true, silent = true })
-vim.g.floaterm_autoinsert = 0
 
 local wk = require("which-key")
 wk.register({
   ["<leader>"] = {
-    name = "leader",
+    name = "<leader>",
     f = {
+      name = "+floaterm",
+      l = { [[:FloatermNew lazygit<CR>]], "lazygit" },
+      n = { [[:FloatermNew<CR>]], "new terminal" },
+      t = { [[:FloatermToggle<CR>]], "toggle terminal" },
+      m = { [[:FloatermNew --height=0.2 --wintype=split --position=bottom<CR>]], "mini term at bottom" },
+      r = { [[:FloatermNew --width=0.45 --wintype=vsplit<CR>]], "mini term at right half" }
+    },
+    t = {
       name = "+telescope",
-      f = { builtin.find_files, "find files" },
-      g = { builtin.live_grep, "live grep" },
-      b = { builtin.buffers, "buffers" },
       h = { builtin.help_tags, "telescope help" },
-      t = {
-        name = "+floaterm",
-        p = { [[:FloatermNew python3<CR>]], "python" },
-        j = { [[:FloatermNew node<CR>]], "javascript" },
-        l = { [[:FloatermNew lazygit<CR>]], "lazygit" },
-        n = { [[:FloatermNew<CR>]], "new terminal" },
-        t = { [[:FloatermToggle<CR>]], "toggle terminal" },
-        m = { [[:FloatermNew --height=0.2 --wintype=split --position=bottom<CR>]], "mini term at bottom" },
-        r = { [[:FloatermNew --width=0.45 --wintype=vsplit<CR>]], "mini term at right half" }
+      l = {
+        name="+lsp",
+        r = { builtin.lsp_references, "lsp references" },
+        i = { builtin.lsp_implementations, "lsp implementations" },
+        d = { builtin.lsp_definitions, "lsp definitions" }
       },
+      s = {
+        name = "+search",
+        f = { builtin.find_files, "search files" },
+        k = { builtin.live_grep, "search keyword" },
+        m = { builtin.lsp_dynamic_workspace_symbols, "search methods" }
+      },
+      g = {
+        name = "+git",
+        c = { builtin.git_bcommits, "current file commits" },
+        a = { builtin.git_commits, "all commits" },
+        s = { builtin.git_status, "git status" },
+        b = { builtin.git_branches, "git branches" },
+      },
+      t = { builtin.treesitter, "treesitter" },
     },
     e = { vim.diagnostic.open_float, "open diagnostics" },
     u = { [[:DBUIToggle<CR>]], "toggle dbui" },
     n = { [[:NvimTreeToggle<CR>]], "toggle nvim tree" },
     p = { [[:PackerSync<CR>]], "sync packer" },
     d = {
+      name = "+debug",
       b = { function() require('dap').toggle_breakpoint() end, "toggle breakpoints" },
       s = { function() require('dap').step_over() end, "step over" },
       u = { function() require("dapui").toggle() end, "toggle ui" }
