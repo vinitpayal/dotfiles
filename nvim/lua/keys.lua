@@ -9,7 +9,7 @@ wk.register({
     name = "<leader>",
     f = {
       name = "+floaterm",
-      l = { [[:FloatermNew lazygit<CR>]], "lazygit" },
+      l = { [[:FloatermNew --height=0.98 --width=0.98 lazygit<CR>]], "lazygit" },
       n = { [[:FloatermNew<CR>]], "new terminal" },
       t = { [[:FloatermToggle<CR>]], "toggle terminal" },
       m = { [[:FloatermNew --height=0.2 --wintype=split --position=bottom<CR>]], "mini term at bottom" },
@@ -19,7 +19,7 @@ wk.register({
       name = "+telescope",
       h = { builtin.help_tags, "telescope help" },
       l = {
-        name="+lsp",
+        name = "+lsp",
         r = { builtin.lsp_references, "lsp references" },
         i = { builtin.lsp_implementations, "lsp implementations" },
         d = { builtin.lsp_definitions, "lsp definitions" }
