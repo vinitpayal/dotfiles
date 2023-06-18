@@ -7,15 +7,15 @@ require("mason").setup()
 require("mason-lspconfig").setup()
 
 local languageServers = {
-    "lua_ls",
-    "tsserver",
-    "pylsp",
-    "dockerls",
-    "docker_compose_language_service",
-    "marksman",
-    "sqlls",
-    "bashls",
-    "jsonls"
+  "lua_ls",
+  "tsserver",
+  "pylsp",
+  "dockerls",
+  "docker_compose_language_service",
+  "marksman",
+  --"sqlls",
+  "bashls",
+  "jsonls"
 }
 
 
@@ -43,7 +43,7 @@ cmp.setup {
   },
   mapping = cmp.mapping.preset.insert({
     ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up
-    ['<C-d>'] = cmp.mapping.scroll_docs(4), -- Down
+    ['<C-d>'] = cmp.mapping.scroll_docs(4),  -- Down
     -- C-b (back) C-f (forward) for snippet placeholder navigation.
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<CR>'] = cmp.mapping.confirm {
@@ -75,30 +75,30 @@ cmp.setup {
   },
 }
 
---cmp.setup({
---  snippet = {
---    -- REQUIRED - you must specify a snippet engine
---    expand = function(args)
---      require('luasnip').lsp_expand(args.body)
---    end,
---  },
---  window = {
---    completion = cmp.config.window.bordered(),
---    documentation = cmp.config.window.bordered(),
---  },
---  mapping = cmp.mapping.preset.insert({
---    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
---    ['<C-f>'] = cmp.mapping.scroll_docs(4),
---    ['<C-Space>'] = cmp.mapping.complete(),
---    ['<C-e>'] = cmp.mapping.abort(),
---    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
---  }),
---  sources = cmp.config.sources({
---    { name = 'luasnip' }
---  }, {
---    { name = 'buffer' },
---  })
---})
+cmp.setup({
+  snippet = {
+    -- REQUIRED - you must specify a snippet engine
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body)
+    end,
+  },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  }),
+  sources = cmp.config.sources({
+    { name = 'luasnip' }
+  }, {
+    { name = 'buffer' },
+  })
+})
 
 --require("lspconfig").lua_ls.setup { capabilities = capabilities }
 ----require("lspconfig").tsserver.setup { capabilities = capabilities }

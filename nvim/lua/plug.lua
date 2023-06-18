@@ -6,10 +6,10 @@ return require('packer').startup(function(use)
     'nvim-tree/nvim-tree.lua',
     'nvim-tree/nvim-web-devicons',
     'nvim-treesitter/nvim-treesitter',
-    'mhinz/vim-startify',
+    --'mhinz/vim-startify',
     'danilamihailov/beacon.nvim',
     'nvim-lualine/lualine.nvim',
-    'Mofiqul/dracula.nvim',
+    --'Mofiqul/dracula.nvim',
     'nvim-telescope/telescope.nvim', tag = '0.1.1',
     'voldikss/vim-floaterm',
     'lukas-reineke/indent-blankline.nvim',
@@ -17,27 +17,23 @@ return require('packer').startup(function(use)
     'sharkdp/fd',
     'nvim-telescope/telescope-fzf-native.nvim', run =
   'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
-    'jnurmine/Zenburn',
     'kdheepak/lazygit.nvim',
-    'tpope/vim-dadbod',
-    'kristijanhusak/vim-dadbod-ui',
-    'folke/todo-comments.nvim',
     'f-person/git-blame.nvim',
 
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
-    "mfussenegger/nvim-lint",
+    --"mfussenegger/nvim-lint",
     "github/copilot.vim",
 
     --- THEMES -> Start -------
-    'phha/zenburn.nvim',
-    'projekt0n/github-nvim-theme', --- good one
+    --'phha/zenburn.nvim',
+    --'projekt0n/github-nvim-theme', --- good one
     -- 'navarasu/onedark.nvim',
     'EdenEast/nightfox.nvim',
-    'mfussenegger/nvim-dap',
-    'rcarriga/nvim-dap-ui',
-    'mxsdev/nvim-dap-vscode-js',
+    --'mfussenegger/nvim-dap',
+    --'rcarriga/nvim-dap-ui',
+    --'mxsdev/nvim-dap-vscode-js',
     'christoomey/vim-tmux-navigator',
     --'embark-theme/vim', as = 'embark'
     --    'marko-cerovac/material.nvim'
@@ -67,11 +63,11 @@ return require('packer').startup(function(use)
     'rafamadriz/friendly-snippets'
   }
 
-  use {
-    "microsoft/vscode-js-debug",
-    opt = true,
-    run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out"
-  }
+  --use {
+  --  "microsoft/vscode-js-debug",
+  --  opt = true,
+  --  run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out"
+  --}
   use {
     "folke/which-key.nvim",
     config = function()
