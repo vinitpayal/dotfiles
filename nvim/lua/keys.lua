@@ -7,7 +7,7 @@ local wk = require("which-key")
 wk.register({
   ["<leader>"] = {
     name = "<leader>",
-    f = {
+    t = {
       name = "+floaterm",
       l = { [[:FloatermNew --height=0.98 --width=0.98 lazygit<CR>]], "lazygit" },
       n = { [[:FloatermNew<CR>]], "new terminal" },
@@ -15,20 +15,17 @@ wk.register({
       m = { [[:FloatermNew --height=0.2 --wintype=split --position=bottom<CR>]], "mini term at bottom" },
       r = { [[:FloatermNew --width=0.45 --wintype=vsplit<CR>]], "mini term at right half" }
     },
-    t = {
+    f = {
       name = "+telescope",
       h = { builtin.help_tags, "telescope help" },
+      f = { builtin.find_files, "search files" },
+      k = { builtin.live_grep, "search keyword" },
+      m = { builtin.lsp_dynamic_workspace_symbols, "search methods" },
       l = {
         name = "+lsp",
         r = { builtin.lsp_references, "lsp references" },
         i = { builtin.lsp_implementations, "lsp implementations" },
         d = { builtin.lsp_definitions, "lsp definitions" }
-      },
-      s = {
-        name = "+search",
-        f = { builtin.find_files, "search files" },
-        k = { builtin.live_grep, "search keyword" },
-        m = { builtin.lsp_dynamic_workspace_symbols, "search methods" }
       },
       g = {
         name = "+git",
@@ -39,16 +36,15 @@ wk.register({
       },
       t = { builtin.treesitter, "treesitter" },
     },
-    e = { vim.diagnostic.open_float, "open diagnostics" },
     u = { [[:DBUIToggle<CR>]], "toggle dbui" },
     n = { [[:NvimTreeToggle<CR>]], "toggle nvim tree" },
     p = { [[:PackerSync<CR>]], "sync packer" },
-    d = {
-      name = "+debug",
-      b = { function() require('dap').toggle_breakpoint() end, "toggle breakpoints" },
-      s = { function() require('dap').step_over() end, "step over" },
-      u = { function() require("dapui").toggle() end, "toggle ui" }
-    }
+    --d = {
+    --  name = "+debug",
+    --  b = { function() require('dap').toggle_breakpoint() end, "toggle breakpoints" },
+    --  s = { function() require('dap').step_over() end, "step over" },
+    --  u = { function() require("dapui").toggle() end, "toggle ui" }
+    --}
   },
   g = {
     b = { [[:GitBlameToggle<CR>]], "toggle git blame" },

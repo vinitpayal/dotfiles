@@ -12,8 +12,7 @@ require('opts')
 require('keys')
 require('lsp')
 require('theme')
-require("daps")
-require("auto_suggest")
+--require("daps")
 require("tmux")
 
 require("nvim-tree").setup({
@@ -79,5 +78,3 @@ require("indent_blankline").setup {
   show_current_context = true,
   show_current_context_start = true,
 }
-
-require("todo-comments").setup {}
