@@ -1,5 +1,4 @@
 -- [[ plug.lua ]]
-
 return require('packer').startup(function(use)
   use { -- filesystem navigation
     'nvim-lua/plenary.nvim',
@@ -47,6 +46,8 @@ return require('packer').startup(function(use)
     run = "make install_jsregexp",
     dependencies = { "rafamadriz/friendly-snippets" }, -- follow latest release.
   })
+
+  use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
 
   --- dependencies for auto suggestion ----
   use {

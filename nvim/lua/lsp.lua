@@ -8,6 +8,12 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   properties = { "documentation", "detail", "additionalTextEdits" },
 }
 
+-- add folding for nvim-ufo
+capabilities.textDocument.foldingRange = {
+    dynamicRegistration = false,
+    lineFoldingOnly = true
+}
+
 require("luasnip.loaders.from_vscode").lazy_load { paths = vim.fn.stdpath "config" .. "/friendly-snippets" }
 
 require 'cmp'.setup {

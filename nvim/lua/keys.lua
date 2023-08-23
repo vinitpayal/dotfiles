@@ -62,6 +62,10 @@ wk.register({
     a = { builtin.git_commits, "all commits" },
     s = { builtin.git_status, "git status" },
     l = { builtin.git_branches, "git branches" },
+    z = {
+      R = { require('ufo').openAllFolds, "ufo-open folds" },
+      M = { require('ufo').closeAllFolds, "ufo-close folds" }
+    }
   }
 })
 
