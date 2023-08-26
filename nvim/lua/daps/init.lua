@@ -4,6 +4,8 @@ vim.fn.sign_define('DapStopped', { text = '▶️', texthl = '', linehl = '', nu
 local dap1 = require('dap')
 require("dapui").setup()
 
+dap1.set_log_level('INFO')
+
 local dapui = require("dapui")
 
 dap1.listeners.after.event_initialized["dapui_config"] = function()

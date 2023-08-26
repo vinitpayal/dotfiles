@@ -65,13 +65,13 @@ cmp.setup {
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    ["<Tab>"] = vim.schedule_wrap(function(fallback) -- required for copilot
-      if cmp.visible() and has_words_before() then
-        cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-      else
-        fallback()
-      end
-    end),
+    --["<Tab>"] = vim.schedule_wrap(function(fallback) -- required for copilot
+    --  if cmp.visible() and has_words_before() then
+    --    cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+    --  else
+    --    fallback()
+    --  end
+    --end),
   }),
   --mapping = {
   --  ["<CR>"] = cmp.mapping.confirm({ select = true }),
