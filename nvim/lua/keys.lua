@@ -66,6 +66,9 @@ wk.register({
       R = { require('ufo').openAllFolds, "ufo-open folds" },
       M = { require('ufo').closeAllFolds, "ufo-close folds" }
     }
+  },
+  b = {
+    b = { require 'dap'.toggle_breakpoint, "toggle breakpoints" }
   }
 })
 

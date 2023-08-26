@@ -16,6 +16,8 @@ dap1.listeners.before.event_exited["dapui_config"] = function()
   dapui.close()
 end
 
+require('dap.ext.vscode').load_launchjs('../vscode/launch.json', {})
+
 dap1.configurations.python = {
   {
     type = 'python',
@@ -27,8 +29,6 @@ dap1.configurations.python = {
     end,
   },
 }
-
---require('dap.ext.vscode').load_launchjs(nil, {})
 
 require("dap-vscode-js").setup({
   -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"

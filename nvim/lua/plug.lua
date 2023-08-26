@@ -30,8 +30,8 @@ return require('packer').startup(function(use)
     --'projekt0n/github-nvim-theme', --- good one
     -- 'navarasu/onedark.nvim',
     'EdenEast/nightfox.nvim',
-    --'mfussenegger/nvim-dap',
-    --'rcarriga/nvim-dap-ui',
+    'mfussenegger/nvim-dap',
+    'rcarriga/nvim-dap-ui',
     --'mxsdev/nvim-dap-vscode-js',
     'christoomey/vim-tmux-navigator',
     --'embark-theme/vim', as = 'embark'
