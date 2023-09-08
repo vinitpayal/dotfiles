@@ -49,6 +49,8 @@ return require('packer').startup(function(use)
 
   use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
 
+  use { 'princejoogie/dir-telescope.nvim' }
+
   --- dependencies for auto suggestion ----
   use {
     'hrsh7th/cmp-nvim-lsp',

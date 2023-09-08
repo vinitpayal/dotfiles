@@ -1,5 +1,6 @@
 -- [[ keys.lua ]]
 local builtin = require('telescope.builtin')
+local telescope_extensions = require('telescope').extensions
 
 vim.api.nvim_set_keymap('t', '<C-t>', '<C-\\><C-n>CR>', { noremap = true, silent = true })
 
@@ -17,10 +18,18 @@ wk.register({
     },
     f = {
       name = "+telescope",
-      h = { builtin.help_tags, "telescope help" },
+      i = { builtin.help_tags, "telescope help" },
       f = { builtin.find_files, "search files" },
       k = { builtin.live_grep, "search keyword" },
       m = { builtin.lsp_dynamic_workspace_symbols, "search methods" },
+      h = { builtin.resume, "search history" }, 
+      b = { builtin.buffers, "search buffers" },
+      t = { builtin.treesitter,"search treesitter"},
+      d = {
+          name = "+dir",
+          k = { telescope_extensions.dir.live_grep, "search keyword in dir" },
+          f = { telescope_extensions.dir.find_files, "search files in dir" },
+      },
       l = {
         name = "+lsp",
         r = { builtin.lsp_references, "lsp references" },
@@ -29,8 +38,11 @@ wk.register({
       },
       g = {
         name = "+git",
+        b = { builtin.git_branches, "git branches" },
+        c = { builtin.git_bcommits, "git current file commits" },
+        s = { builtin.git_status, "git status" },
+
       },
-      t = { builtin.treesitter, "treesitter" },
     },
     u = { [[:DBUIToggle<CR>]], "toggle dbui" },
     n = { [[:NvimTreeToggle<CR>]], "toggle nvim tree" },

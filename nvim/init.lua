@@ -3,6 +3,10 @@
 -- is called; otherwise, it will default to "\"
 vim.g.mapleader = ","
 vim.g.localleader = "\\"
+vim.g.copilot_assume_mapped = true
+vim.g.copilot_no_tab_map = true
+vim.g.copilot_assume_mapped = true
+vim.g.copilot_tab_fallback = ""
 
 vim.o.packpath = vim.o.packpath .. ',~/.config/nvim/site'
 -- import ---
@@ -66,7 +70,14 @@ require('telescope').setup {
   }
 }
 
+require("dir-telescope").setup({
+	hidden = true,
+	no_ignore = false,
+	show_preview = true
+})
+
 require('telescope').load_extension('lazygit')
+require("telescope").load_extension("dir")
 
 require('nvim-web-devicons').get_icons()
 
