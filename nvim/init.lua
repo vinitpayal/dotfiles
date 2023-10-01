@@ -77,15 +77,6 @@ require("telescope").load_extension("dir")
 
 require('nvim-web-devicons').get_icons()
 
-vim.g.indent_blankline_use_treesitter = true
-vim.g.indent_blankline_show_first_indent_level = true
-require("indent_blankline").setup {
-  --blankline_char = ".",
-  space_char_blankline = " ",
-  show_current_context = true,
-  show_current_context_start = true,
-}
-
 -- dims inactive vim windows
 require('shade').setup({
   overlay_opacity = 50,
@@ -102,3 +93,5 @@ require('fold-preview').setup({
     auto = 400
 })
 
+-- identline setup
+require("ibl").setup()
