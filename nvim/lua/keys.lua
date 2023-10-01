@@ -48,7 +48,7 @@ wk.register({
     n = { [[:NvimTreeToggle<CR>]], "toggle nvim tree" },
     p = { [[:PackerSync<CR>]], "sync packer" },
   },
-  l = {
+  s = {
     name="+lsp",
     a = { vim.lsp.buf.code_action, "code action" },
     A = { vim.lsp.buf.range_code_action, "range code action" },
