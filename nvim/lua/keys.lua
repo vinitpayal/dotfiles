@@ -47,6 +47,10 @@ wk.register({
     u = { [[:DBUIToggle<CR>]], "toggle dbui" },
     n = { [[:NvimTreeToggle<CR>]], "toggle nvim tree" },
     p = { [[:PackerSync<CR>]], "sync packer" },
+    c = {
+        name = "+clipboard(neoclip)",
+        h = { [[:lua require('telescope').extensions.neoclip.default()<CR>]], "search clipboard history" }
+    }
   },
   s = {
     name="+lsp",

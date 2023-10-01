@@ -85,6 +85,19 @@ return require('packer').startup(function(use)
     end
   }
 
+  use {
+      "AckslD/nvim-neoclip.lua",
+      requires = {
+        -- you'll need at least one of these
+        -- {'nvim-telescope/telescope.nvim'},
+        -- {'ibhagwan/fzf-lua'},
+      },
+      config = function()
+        require('neoclip').setup()
+      end,
+  }
+
+
   --use {
   --  "microsoft/vscode-js-debug",
   --  opt = true,
