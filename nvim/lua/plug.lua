@@ -22,6 +22,8 @@ return require('packer').startup(function(use)
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
+    "sunjon/shade.nvim",
+    "folke/twilight.nvim",
     --"mfussenegger/nvim-lint",
     --"github/copilot.vim",
 

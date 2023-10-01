@@ -85,6 +85,10 @@ wk.register({
   },
   a = {
     b = { require 'dap'.toggle_breakpoint, "toggle breakpoints" }
+  },
+  t = {
+      name = "+twilight",
+      t = { [[:Twilight<CR>]], "toggle twilight" }, 
   }
 })
 
@@ -103,3 +107,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     --end, opts)
   end,
 })
+
+
+
