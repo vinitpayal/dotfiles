@@ -100,6 +100,19 @@ return require('packer').startup(function(use)
   }
 
 
+ use {
+      "0oAstro/dim.lua",
+      requires = { "nvim-treesitter/nvim-treesitter", "neovim/nvim-lspconfig" },
+      config = function()
+        require('dim').setup({})
+      end
+}
+
+use { 'anuvyklack/fold-preview.nvim',
+   requires = 'anuvyklack/keymap-amend.nvim'
+}
+
+
   --use {
   --  "microsoft/vscode-js-debug",
   --  opt = true,

@@ -92,5 +92,13 @@ require('shade').setup({
   opacity_step = 1,
 })
 
+-- dims unused keywords
+require('dim').setup({})
+
 -- for code folding
 require('ufo').setup()
+
+require('fold-preview').setup({
+    auto = 400
+})
+
