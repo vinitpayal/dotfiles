@@ -86,5 +86,11 @@ require("indent_blankline").setup {
   show_current_context_start = true,
 }
 
+-- dims inactive vim windows
+require('shade').setup({
+  overlay_opacity = 50,
+  opacity_step = 1,
+})
+
 -- for code folding
 require('ufo').setup()
