@@ -12,7 +12,7 @@ require('opts')
 require('keys')
 require('lsp')
 require('theme')
---require("daps")
+require("daps")
 require("tmux")
 
 require("nvim-tree").setup({
@@ -95,3 +95,7 @@ require('fold-preview').setup({
 
 -- identline setup
 require("ibl").setup()
+
+require("neodev").setup({
+  library = { plugins = { "nvim-dap-ui" }, types = true },
+})

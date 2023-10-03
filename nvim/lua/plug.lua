@@ -32,15 +32,21 @@ return require('packer').startup(function(use)
     --'projekt0n/github-nvim-theme', --- good one
     -- 'navarasu/onedark.nvim',
     'EdenEast/nightfox.nvim',
+    'folke/neodev.nvim',
     'mfussenegger/nvim-dap',
     'rcarriga/nvim-dap-ui',
-    --'mxsdev/nvim-dap-vscode-js',
     'christoomey/vim-tmux-navigator',
     --'embark-theme/vim', as = 'embark'
     --    'marko-cerovac/material.nvim'
     --'ellisonleao/gruvbox.nvim'
     --- THEMES -> End -------
 
+  }
+
+  use {
+      "microsoft/vscode-js-debug",
+      opt = true,
+      run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out" 
   }
 
   use({
@@ -52,6 +58,9 @@ return require('packer').startup(function(use)
   use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
 
   use { 'princejoogie/dir-telescope.nvim' }
+
+  use { "mxsdev/nvim-dap-vscode-js", requires = {"mfussenegger/nvim-dap"} }
+
 
   --- dependencies for auto suggestion ----
   use {
@@ -113,11 +122,6 @@ use { 'anuvyklack/fold-preview.nvim',
 }
 
 
-  --use {
-  --  "microsoft/vscode-js-debug",
-  --  opt = true,
-  --  run = "npm install --legacy-peer-deps && npx gulp vsDebugServerBundle && mv dist out"
-  --}
   use {
     "folke/which-key.nvim",
     config = function()

@@ -4,6 +4,13 @@ local telescope_extensions = require('telescope').extensions
 
 vim.api.nvim_set_keymap('t', '<C-t>', '<C-\\><C-n>CR>', { noremap = true, silent = true })
 
+local startDebugging = function()
+    if vim.fn.filereadable('.vscode/launch.json') then
+        require('dap.ext.vscode').load_launchjs(nil, {})
+    end  
+        require('dap').continue()
+end
+
 local wk = require("which-key")
 wk.register({
   ["<leader>"] = {
@@ -50,9 +57,9 @@ wk.register({
     c = {
         name = "+clipboard(neoclip)",
         h = { [[:lua require('telescope').extensions.neoclip.default()<CR>]], "search clipboard history" }
-    }
+    } 
   },
-  s = {
+  c = {
     name="+lsp",
     a = { vim.lsp.buf.code_action, "code action" },
     A = { vim.lsp.buf.range_code_action, "range code action" },
@@ -83,13 +90,15 @@ wk.register({
       M = { require('ufo').closeAllFolds, "ufo-close folds" }
     }
   },
-  a = {
-    b = { require 'dap'.toggle_breakpoint, "toggle breakpoints" }
-  },
   t = {
       name = "+twilight",
       t = { [[:Twilight<CR>]], "toggle twilight" }, 
-  }
+  },
+  f = {
+        name = "+debug",
+        a = { startDebugging, "start/continue debugging" },
+        b = { require 'dap'.toggle_breakpoint, "toggle breakpoints" }
+    }
 })
 
 -- Use LspAttach autocommand to only map the following keys
