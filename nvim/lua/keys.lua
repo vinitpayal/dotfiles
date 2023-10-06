@@ -59,7 +59,7 @@ wk.register({
         h = { [[:lua require('telescope').extensions.neoclip.default()<CR>]], "search clipboard history" }
     } 
   },
-  c = {
+  n = {
     name="+lsp",
     a = { vim.lsp.buf.code_action, "code action" },
     A = { vim.lsp.buf.range_code_action, "range code action" },
@@ -97,7 +97,8 @@ wk.register({
   f = {
         name = "+debug",
         a = { startDebugging, "start/continue debugging" },
-        b = { require 'dap'.toggle_breakpoint, "toggle breakpoints" }
+        b = { require 'dap'.toggle_breakpoint, "toggle breakpoints" },
+        u = { require 'dapui'.toggle, "toggle ui" } 
     }
 })
 
