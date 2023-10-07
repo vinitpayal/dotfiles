@@ -121,6 +121,13 @@ use { 'anuvyklack/fold-preview.nvim',
    requires = 'anuvyklack/keymap-amend.nvim'
 }
 
+use {
+    'Joakker/lua-json5',
+    -- if you're on windows
+    -- run = 'powershell ./install.ps1'
+    run = './install.sh'
+}
+
 
   use {
     "folke/which-key.nvim",

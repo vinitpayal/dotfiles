@@ -1,9 +1,24 @@
+--- steps required for dap to work for json5 based vscode launch.json
+-- brew install rustup-init
+-- add below in .cargo/config.toml
+-- [target.x86_64-apple-darwin]
+--rustflags = [
+--    "-C", "link-arg=-undefined",
+--    "-C", "link-arg=dynamic_lookup",
+--]
+--
+--[target.aarch64-apple-darwin]
+--rustflags = [
+--    "-C", "link-arg=-undefined",
+--    "-C", "link-arg=dynamic_lookup",
+--]
+
+
 vim.fn.sign_define('DapBreakpoint', { text = '🟥', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapStopped', { text = '▶️', texthl = '', linehl = '', numhl = '' })
 
 local dap = require('dap')
 require("dapui").setup()
-
 
 dap.set_log_level('INFO')
 
@@ -45,6 +60,8 @@ require("dap-vscode-js").setup({
   -- log_file_level = false -- Logging level for output to file. Set to false to disable file logging.
   -- log_console_level = vim.log.levels.ERROR -- Logging level for output to console. Set to false to disable console output.
 })
+
+--require('dap.ext.vscode').json_decode = require'json5'.parse
 
 require("dap").adapters["node"] = {
   type = "server",

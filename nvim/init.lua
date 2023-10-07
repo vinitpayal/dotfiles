@@ -5,6 +5,8 @@ vim.g.mapleader = ","
 vim.g.localleader = "\\"
 
 vim.o.packpath = vim.o.packpath .. ',~/.config/nvim/site'
+table.insert(vim._so_trails, "/?.dylib")
+
 -- import ---
 require('plug')
 require('vars')

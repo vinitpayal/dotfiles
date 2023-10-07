@@ -59,7 +59,7 @@ wk.register({
         h = { [[:lua require('telescope').extensions.neoclip.default()<CR>]], "search clipboard history" }
     } 
   },
-  n = {
+  m = {
     name="+lsp",
     a = { vim.lsp.buf.code_action, "code action" },
     A = { vim.lsp.buf.range_code_action, "range code action" },
@@ -99,7 +99,7 @@ wk.register({
         a = { startDebugging, "start/continue debugging" },
         b = { require 'dap'.toggle_breakpoint, "toggle breakpoints" },
         u = { require 'dapui'.toggle, "toggle ui" } 
-    }
+  }
 })
 
 -- Use LspAttach autocommand to only map the following keys
