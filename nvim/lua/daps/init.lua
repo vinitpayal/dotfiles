@@ -52,10 +52,9 @@ end
 local js_based_languages = { "typescript", "javascript", "typescriptreact", "node" }
 
 require("dap-vscode-js").setup({
-  -- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+    adapters = { 'chrome', 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost', 'node', 'chrome' }
   -- debugger_path = "(runtimedir)/site/pack/packer/opt/vscode-js-debug", -- Path to vscode-js-debug installation.
   -- debugger_cmd = { "js-debug-adapter" }, -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
-  adapters = { 'node', 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' }, -- which adapters to register in nvim-dap
   -- log_file_path = "(stdpath cache)/dap_vscode_js.log" -- Path for file logging
   -- log_file_level = false -- Logging level for output to file. Set to false to disable file logging.
   -- log_console_level = vim.log.levels.ERROR -- Logging level for output to console. Set to false to disable console output.
@@ -63,16 +62,7 @@ require("dap-vscode-js").setup({
 
 --require('dap.ext.vscode').json_decode = require'json5'.parse
 
-require("dap").adapters["node"] = {
-  type = "server",
-  host = "localhost",
-  port = "${port}",
-  executable = {
-    command = "node",
-    -- 💀 Make sure to update this path to point to your installation
-    args = {"${port}"},
-  }
-}
+local js_based_languages = { "typescript", "javascript", "typescriptreact" }
 
 for _, language in ipairs(js_based_languages) do
   require("dap").configurations[language] = {
@@ -89,13 +79,21 @@ for _, language in ipairs(js_based_languages) do
       name = "Attach",
       processId = require 'dap.utils'.pick_process,
       cwd = "${workspaceFolder}",
+    },
+    {
+      type = "pwa-chrome",
+      request = "launch",
+      name = "Start Chrome with \"localhost\"",
+      url = "http://localhost:3000",
+      webRoot = "${workspaceFolder}",
+      userDataDir = "${workspaceFolder}/.vscode/vscode-chrome-debug-userdatadir"
     }
   }
 end
 
-require('dap.ext.vscode').load_launchjs(nil,
-  { ['pwa-node'] = js_based_languages,
-    ['node'] = js_based_languages,
-    ['chrome'] = js_based_languages,
-    ['pwa-chrome'] = js_based_languages }
-)
+require('dap.ext.vscode').load_launchjs()
+  --{ ['pwa-node'] = js_based_languages,
+  --  ['node'] = js_based_languages,
+  --  ['chrome'] = js_based_languages,
+  --  ['pwa-chrome'] = js_based_languages }
+--)
