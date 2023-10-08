@@ -3,12 +3,14 @@
 -- is called; otherwise, it will default to "\"
 vim.g.mapleader = ","
 vim.g.localleader = "\\"
+vim.g.gitblame_enabled = 0
+vim.g.gitblame_date_format = '%d/%b/%Y'
+vim.g.gitblame_message_template = '<author> • <date> • <summary>'
 
-vim.o.packpath = vim.o.packpath .. ',~/.config/nvim/site'
 table.insert(vim._so_trails, "/?.dylib")
 
 -- import ---
-require('plug')
+require('packer_setup')
 require('vars')
 require('opts')
 require('keys')
@@ -28,10 +30,6 @@ require("nvim-tree").setup({
     --dotfiles = true,
   },
 })
-
-vim.g.gitblame_enabled = 0
-vim.g.gitblame_date_format = '%d/%b/%Y'
-vim.g.gitblame_message_template = '<author> • <date> • <summary>'
 
 require('lualine').setup({
   options = {
@@ -76,7 +74,6 @@ require("dir-telescope").setup({
 
 require('telescope').load_extension('lazygit')
 require("telescope").load_extension("dir")
-
 require('nvim-web-devicons').get_icons()
 
 -- dims inactive vim windows
