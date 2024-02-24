@@ -1,0 +1,41 @@
+[bell]
+animation = "EaseOutExpo"
+color = "0xffffff"
+duration = 300
+
+[env]
+title = "Alacritty"
+
+[font]
+size = 15.0
+
+[font.bold]
+family = "FiraCode Nerd Font"
+style = "Medium"
+
+[font.glyph_offset]
+x = 1
+y = 2
+
+[font.italic]
+family = "FiraCode Nerd Font"
+
+[font.normal]
+family = "FiraCode Nerd Font"
+style = "Regular"
+
+[font.offset]
+x = 0
+y = 3
+
+[scrolling]
+history = 5000
+multiplier = 3
+
+[window]
+dynamic_title = true
+opacity = 0.99
+
+[window.padding]
+x = 5
+y = 5
