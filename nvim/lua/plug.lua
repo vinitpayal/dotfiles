@@ -28,14 +28,16 @@ return require('packer').startup(function(use)
     --"github/copilot.vim",
 
     --- THEMES -> Start -------
+    "ellisonleao/gruvbox.nvim"
+
     --'phha/zenburn.nvim',
     --'projekt0n/github-nvim-theme', --- good one
     -- 'navarasu/onedark.nvim',
-    'EdenEast/nightfox.nvim',
-    'folke/neodev.nvim',
-    'mfussenegger/nvim-dap',
-    'rcarriga/nvim-dap-ui',
-    'christoomey/vim-tmux-navigator',
+    --'EdenEast/nightfox.nvim',
+    --'folke/neodev.nvim',
+    --'mfussenegger/nvim-dap',
+    --'rcarriga/nvim-dap-ui',
+    --'christoomey/vim-tmux-navigator',
     --'embark-theme/vim', as = 'embark'
     --    'marko-cerovac/material.nvim'
     --'ellisonleao/gruvbox.nvim'

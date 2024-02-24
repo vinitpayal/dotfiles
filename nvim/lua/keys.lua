@@ -4,13 +4,6 @@ local telescope_extensions = require('telescope').extensions
 
 vim.api.nvim_set_keymap('t', '<C-t>', '<C-\\><C-n>CR>', { noremap = true, silent = true })
 
-local startDebugging = function()
-    if vim.fn.filereadable('.vscode/launch.json') then
-        require('dap.ext.vscode').load_launchjs(nil, {})
-    end  
-        require('dap').continue()
-end
-
 local wk = require("which-key")
 wk.register({
   ["<leader>"] = {
@@ -94,12 +87,6 @@ wk.register({
       name = "+twilight",
       t = { [[:Twilight<CR>]], "toggle twilight" }, 
   },
-  f = {
-        name = "+debug",
-        a = { startDebugging, "start/continue debugging" },
-        b = { require 'dap'.toggle_breakpoint, "toggle breakpoints" },
-        u = { require 'dapui'.toggle, "toggle ui" } 
-  }
 })
 
 -- Use LspAttach autocommand to only map the following keys
