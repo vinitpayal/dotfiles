@@ -25,7 +25,7 @@ return require('packer').startup(function(use)
     "sunjon/shade.nvim",
     "folke/twilight.nvim",
     --"mfussenegger/nvim-lint",
-    --"github/copilot.vim",
+    "github/copilot.vim",
 
     --- THEMES -> Start -------
     "ellisonleao/gruvbox.nvim"
@@ -76,27 +76,27 @@ return require('packer').startup(function(use)
     --'hrsh7th/vim-vsnip',
   }
 
-  use {
-    "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
-    event = "InsertEnter",
-    requires = "zbirenbaum/copilot-cmp",
-    config = function()
-      require("copilot").setup({
-        panel = {
-          enabled = false
-        },
-        suggestion = {
-          auto_trigger = true,
-        }
-      })
-      require("copilot_cmp").setup({
-        formatters = {
-          insert_text = require("copilot_cmp.format").remove_existing
-        },
-      })
-    end
-  }
+  --use {
+  --  "zbirenbaum/copilot.lua",
+  --  cmd = "Copilot",
+  --  event = "InsertEnter",
+  --  requires = "zbirenbaum/copilot-cmp",
+  --  config = function()
+  --    require("copilot").setup({
+  --      panel = {
+  --        enabled = false
+  --      },
+  --      suggestion = {
+  --        auto_trigger = true,
+  --      }
+  --    })
+  --    require("copilot_cmp").setup({
+  --      formatters = {
+  --        insert_text = require("copilot_cmp.format").remove_existing
+  --      },
+  --    })
+  --  end
+  --}
 
   use {
       "AckslD/nvim-neoclip.lua",
