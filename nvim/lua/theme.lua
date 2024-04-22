@@ -5,7 +5,7 @@ require("gruvbox").setup({
   underline = true,
   bold = true,
   italic = {
-    strings = true,
+    strings = false,
     emphasis = true,
     comments = true,
     operators = false,
@@ -23,6 +23,8 @@ require("gruvbox").setup({
   dim_inactive = false,
   transparent_mode = false,
 })
+
+vim.o.background = "light"
 vim.cmd("colorscheme gruvbox")
 
 -- Dayfox color palette

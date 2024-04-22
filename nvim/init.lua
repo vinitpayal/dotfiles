@@ -33,7 +33,7 @@ require("nvim-tree").setup({
 
 require('lualine').setup({
   options = {
-    theme = 'dayfox',
+    theme = 'gruvbox',
   },
   sections = {
     lualine_c = { { 'filename', path = 1 } }
