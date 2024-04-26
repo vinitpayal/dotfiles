@@ -51,6 +51,11 @@ wk.register({
         h = { [[:lua require('telescope').extensions.neoclip.default()<CR>]], "search clipboard history" }
     } 
   },
+  z = {
+    name = "+fold",
+    R = { require('ufo').openAllFolds, "ufo-open folds" },
+    M = { require('ufo').closeAllFolds, "ufo-close folds" }
+  }
   --m = {
   --  name="+lsp",
   --  a = { vim.lsp.buf.code_action, "code action" },
