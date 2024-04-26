@@ -88,9 +88,5 @@ require('dim').setup({})
 -- for code folding
 require('ufo').setup()
 
-require('fold-preview').setup({
-    auto = 400
-})
-
 -- identline setup
 require("ibl").setup()

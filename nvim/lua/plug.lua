@@ -5,7 +5,6 @@ return require('packer').startup(function(use)
     'nvim-tree/nvim-tree.lua',
     'nvim-tree/nvim-web-devicons',
     'nvim-treesitter/nvim-treesitter',
-    --'mhinz/vim-startify',
     'danilamihailov/beacon.nvim',
     'nvim-lualine/lualine.nvim',
     --'Mofiqul/dracula.nvim',
@@ -23,7 +22,6 @@ return require('packer').startup(function(use)
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
     "sunjon/shade.nvim",
-    "folke/twilight.nvim",
     --"mfussenegger/nvim-lint",
     "github/copilot.vim",
 
@@ -57,6 +55,7 @@ return require('packer').startup(function(use)
     dependencies = { "rafamadriz/friendly-snippets" }, -- follow latest release.
   })
 
+  -- for folding, maybe can be removed
   use {'kevinhwang91/nvim-ufo', requires = 'kevinhwang91/promise-async'}
 
   use { 'princejoogie/dir-telescope.nvim' }
@@ -75,38 +74,44 @@ return require('packer').startup(function(use)
     --'hrsh7th/cmp-vsnip',
     --'hrsh7th/vim-vsnip',
   }
-
-  --use {
-  --  "zbirenbaum/copilot.lua",
-  --  cmd = "Copilot",
-  --  event = "InsertEnter",
-  --  requires = "zbirenbaum/copilot-cmp",
-  --  config = function()
-  --    require("copilot").setup({
-  --      panel = {
-  --        enabled = false
-  --      },
-  --      suggestion = {
-  --        auto_trigger = true,
-  --      }
-  --    })
-  --    require("copilot_cmp").setup({
-  --      formatters = {
-  --        insert_text = require("copilot_cmp.format").remove_existing
-  --      },
-  --    })
-  --  end
-  --}
-
+  
   use {
       "AckslD/nvim-neoclip.lua",
-      requires = {
-        -- you'll need at least one of these
-        -- {'nvim-telescope/telescope.nvim'},
-        -- {'ibhagwan/fzf-lua'},
-      },
       config = function()
-        require('neoclip').setup()
+        require('neoclip').setup({
+          history = 1000,
+          filter = nil,
+          preview = true,
+          prompt = nil,
+          on_select = {
+            move_to_front = false,
+            close_telescope = true,
+          },
+          on_paste = {
+            set_reg = false,
+            move_to_front = false,
+            close_telescope = true,
+          },
+          on_replay = {
+            set_reg = false,
+            move_to_front = false,
+            close_telescope = true,
+          },
+          keys = {
+            i = {
+              select = "<cr>",
+              paste = "<c-p>",
+              paste_behind = "<c-k>",
+              custom = {},
+            },
+            n = {
+              select = "<cr>",
+              paste = "p",
+              paste_behind = "P",
+              custom = {},
+            },
+          },
+        })
       end,
   }
 
@@ -117,10 +122,6 @@ return require('packer').startup(function(use)
       config = function()
         require('dim').setup({})
       end
-}
-
-use { 'anuvyklack/fold-preview.nvim',
-   requires = 'anuvyklack/keymap-amend.nvim'
 }
 
 use {

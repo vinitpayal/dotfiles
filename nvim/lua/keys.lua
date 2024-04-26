@@ -41,7 +41,6 @@ wk.register({
         b = { builtin.git_branches, "git branches" },
         c = { builtin.git_bcommits, "git current file commits" },
         s = { builtin.git_status, "git status" },
-
       },
     },
     u = { [[:DBUIToggle<CR>]], "toggle dbui" },
@@ -52,41 +51,37 @@ wk.register({
         h = { [[:lua require('telescope').extensions.neoclip.default()<CR>]], "search clipboard history" }
     } 
   },
-  m = {
-    name="+lsp",
-    a = { vim.lsp.buf.code_action, "code action" },
-    A = { vim.lsp.buf.range_code_action, "range code action" },
-    d = { vim.lsp.buf.definition, "go to definition" },
-    D = { vim.lsp.buf.declaration, "go to declaration" },
-    r = { vim.lsp.buf.references, "go to references" },
-    R = { vim.lsp.buf.rename, "rename" },
-    i = { vim.lsp.buf.implementation, "go to implementation" },
-    s = { vim.lsp.buf.signature_help, "signature help" },
-    t = { vim.lsp.buf.type_definition, "go to type definition" },
-    f = { vim.lsp.buf.formatting, "format" },
-    F = { vim.lsp.buf.formatting_sync, "format sync" },
-    e = { vim.lsp.diagnostic.show_line_diagnostics, "show line diagnostics" },
-    E = { vim.lsp.diagnostic.set_loclist, "set loclist" },
-    p = { vim.lsp.diagnostic.goto_prev, "go to previous diagnostic" },
-    n = { vim.lsp.diagnostic.goto_next, "go to next diagnostic" },
-    q = { vim.lsp.diagnostic.set_qflist, "set qflist" },
-    l = { vim.lsp.diagnostic.show_line_diagnostics, "show line diagnostics" },
-  },
-  g = {
-    b = { [[:GitBlameToggle<CR>]], "toggle git blame" },
-    c = { builtin.git_bcommits, "current file commits" },
-    a = { builtin.git_commits, "all commits" },
-    s = { builtin.git_status, "git status" },
-    l = { builtin.git_branches, "git branches" },
-    z = {
-      R = { require('ufo').openAllFolds, "ufo-open folds" },
-      M = { require('ufo').closeAllFolds, "ufo-close folds" }
-    }
-  },
-  t = {
-      name = "+twilight",
-      t = { [[:Twilight<CR>]], "toggle twilight" }, 
-  },
+  --m = {
+  --  name="+lsp",
+  --  a = { vim.lsp.buf.code_action, "code action" },
+  --  A = { vim.lsp.buf.range_code_action, "range code action" },
+  --  d = { vim.lsp.buf.definition, "go to definition" },
+  --  D = { vim.lsp.buf.declaration, "go to declaration" },
+  --  r = { vim.lsp.buf.references, "go to references" },
+  --  R = { vim.lsp.buf.rename, "rename" },
+  --  i = { vim.lsp.buf.implementation, "go to implementation" },
+  --  s = { vim.lsp.buf.signature_help, "signature help" },
+  --  t = { vim.lsp.buf.type_definition, "go to type definition" },
+  --  f = { vim.lsp.buf.formatting, "format" },
+  --  F = { vim.lsp.buf.formatting_sync, "format sync" },
+  --  e = { vim.lsp.diagnostic.show_line_diagnostics, "show line diagnostics" },
+  --  E = { vim.lsp.diagnostic.set_loclist, "set loclist" },
+  --  p = { vim.lsp.diagnostic.goto_prev, "go to previous diagnostic" },
+  --  n = { vim.lsp.diagnostic.goto_next, "go to next diagnostic" },
+  --  q = { vim.lsp.diagnostic.set_qflist, "set qflist" },
+  --  l = { vim.lsp.diagnostic.show_line_diagnostics, "show line diagnostics" },
+  --},
+  --g = {
+  --  b = { [[:GitBlameToggle<CR>]], "toggle git blame" },
+  --  c = { builtin.git_bcommits, "current file commits" },
+  --  a = { builtin.git_commits, "all commits" },
+  --  s = { builtin.git_status, "git status" },
+  --  l = { builtin.git_branches, "git branches" },
+  --  z = {
+  --    R = { require('ufo').openAllFolds, "ufo-open folds" },
+  --    M = { require('ufo').closeAllFolds, "ufo-close folds" }
+  --  }
+  --},
 })
 
 -- Use LspAttach autocommand to only map the following keys
@@ -104,6 +99,3 @@ vim.api.nvim_create_autocmd('LspAttach', {
     --end, opts)
   end,
 })
-
-
-
