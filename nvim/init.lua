@@ -86,7 +86,11 @@ require('shade').setup({
 require('dim').setup({})
 
 -- for code folding
-require('ufo').setup()
+require('ufo').setup({
+  provider_selector = function(bufnr, filetype, buftype)
+    return {'treesitter', 'indent'}
+  end
+})
 
 -- identline setup
 require("ibl").setup()
