@@ -31,7 +31,7 @@ require 'cmp'.setup {
 
 local languageServers = {
   "lua_ls",
-  -- "tsserver",
+  "tsserver",
   "pylsp",
   "dockerls",
   "docker_compose_language_service",
