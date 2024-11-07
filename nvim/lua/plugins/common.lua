@@ -1,7 +1,20 @@
 return {
-    { "folke/which-key.nvim", lazy=false },
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy"
+    },
     { 'nvim-lua/plenary.nvim' },
-    { 'nvim-tree/nvim-tree.lua', lazy=false },
+    {
+        "nvim-tree/nvim-tree.lua",
+        version = "*",
+        lazy = false,
+        dependencies = {
+          "nvim-tree/nvim-web-devicons",
+        },
+        config = function()
+          require("nvim-tree").setup {}
+        end,
+    },
     { 'nvim-tree/nvim-web-devicons' },
     { 'nvim-treesitter/nvim-treesitter' },
     { 'danilamihailov/beacon.nvim' },
@@ -17,7 +30,6 @@ return {
     { "williamboman/mason-lspconfig.nvim" },
     { "neovim/nvim-lspconfig" },
     { "sunjon/shade.nvim" },
-    { "github/copilot.vim" },
     { "L3MON4D3/LuaSnip" },
     { 'kevinhwang91/nvim-ufo' },
     { 'princejoogie/dir-telescope.nvim' },
@@ -26,4 +38,5 @@ return {
     { 'saadparwaiz1/cmp_luasnip' },
     { "0oAstro/dim.lua" },
     { "AckslD/nvim-neoclip.lua" },
+    { "github/copilot.vim" },
 }

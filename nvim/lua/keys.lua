@@ -3,8 +3,8 @@ local builtin = require('telescope.builtin')
 local telescope_extensions = require('telescope').extensions
 
 vim.api.nvim_set_keymap('t', '<C-t>', '<C-\\><C-n>CR>', { noremap = true, silent = true })
-
 local wk = require("which-key")
+
 wk.register({
   ["<leader>"] = {
     name = "<leader>",

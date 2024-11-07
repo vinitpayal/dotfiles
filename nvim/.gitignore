@@ -3,3 +3,4 @@ site/
 lua/packer.nvim/
 pack/
 plugin/
+lazy-lock.json
