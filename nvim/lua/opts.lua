@@ -6,6 +6,7 @@ local opt = vim.opt
 --  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 --  set termguicolors
 --endif
+--
 
 opt.clipboard = 'unnamedplus'
 opt.list = true
