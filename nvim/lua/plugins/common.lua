@@ -19,7 +19,7 @@ return {
     { 'nvim-treesitter/nvim-treesitter' },
     { 'danilamihailov/beacon.nvim' },
     { 'nvim-lualine/lualine.nvim' },
-    { 'nvim-telescope/telescope.nvim', version = '0.1.1' },
+    { 'nvim-telescope/telescope.nvim' },
     { 'voldikss/vim-floaterm' },
     { 'lukas-reineke/indent-blankline.nvim' },
     { 'BurntSushi/ripgrep' },
