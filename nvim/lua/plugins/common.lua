@@ -10,16 +10,13 @@ return {
         lazy = false,
         dependencies = {
           "nvim-tree/nvim-web-devicons",
-        },
-        config = function()
-          require("nvim-tree").setup {}
-        end,
+        }
     },
     { 'nvim-tree/nvim-web-devicons' },
     { 'nvim-treesitter/nvim-treesitter' },
     { 'danilamihailov/beacon.nvim' },
     { 'nvim-lualine/lualine.nvim' },
-    { 'nvim-telescope/telescope.nvim', version = '0.1.1' },
+    { 'nvim-telescope/telescope.nvim' },
     { 'voldikss/vim-floaterm' },
     { 'lukas-reineke/indent-blankline.nvim' },
     { 'BurntSushi/ripgrep' },
@@ -31,7 +28,6 @@ return {
     { "neovim/nvim-lspconfig" },
     { "sunjon/shade.nvim" },
     { "L3MON4D3/LuaSnip" },
-    { 'kevinhwang91/nvim-ufo' },
     { 'princejoogie/dir-telescope.nvim' },
     { 'hrsh7th/cmp-nvim-lsp' },
     { 'hrsh7th/nvim-cmp' },
@@ -39,4 +35,9 @@ return {
     { "0oAstro/dim.lua" },
     { "AckslD/nvim-neoclip.lua" },
     { "github/copilot.vim" },
+    {
+      "gennaro-tedesco/nvim-jqx",
+      event = {"BufReadPost"},
+      ft = { "json", "yaml" },
+    }
 }

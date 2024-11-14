@@ -15,6 +15,7 @@ require('opts')
 require('keys')
 require('lsp')
 require("tmux")
+require("autogroups")
 
 vim.o.background = "light" -- or "light" for light mode
 vim.cmd([[colorscheme gruvbox]])
