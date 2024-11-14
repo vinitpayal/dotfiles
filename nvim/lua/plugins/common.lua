@@ -10,10 +10,7 @@ return {
         lazy = false,
         dependencies = {
           "nvim-tree/nvim-web-devicons",
-        },
-        config = function()
-          require("nvim-tree").setup {}
-        end,
+        }
     },
     { 'nvim-tree/nvim-web-devicons' },
     { 'nvim-treesitter/nvim-treesitter' },
@@ -38,4 +35,9 @@ return {
     { "0oAstro/dim.lua" },
     { "AckslD/nvim-neoclip.lua" },
     { "github/copilot.vim" },
+    {
+      "gennaro-tedesco/nvim-jqx",
+      event = {"BufReadPost"},
+      ft = { "json", "yaml" },
+    }
 }
