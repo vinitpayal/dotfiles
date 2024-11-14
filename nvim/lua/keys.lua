@@ -56,6 +56,17 @@ wk.register({
     R = { require('ufo').openAllFolds, "ufo-open folds" },
     M = { require('ufo').closeAllFolds, "ufo-close folds" },
     P = { require('ufo').peekFoldedLinesUnderCursor, "Quick peek into folded area" }
+  },
+  g = {
+    name = "+goto",
+    p = {
+      name = "+preview-plugin",
+      d = { require('goto-preview').goto_preview_definition, "goto_preview_definition" },
+      t = { require('goto-preview').goto_preview_type_definition, "goto_preview_type_definition" },
+      i = { require('goto-preview').goto_preview_implementation, "goto_preview_implementation" },
+      r = { require('goto-preview').goto_preview_references, "goto_preview_references" }
+    },
+    P = { require('goto-preview').close_all_win, "close all previews" }
   }
   --m = {
   --  name="+lsp",
