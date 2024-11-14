@@ -54,7 +54,8 @@ wk.register({
   z = {
     name = "+fold",
     R = { require('ufo').openAllFolds, "ufo-open folds" },
-    M = { require('ufo').closeAllFolds, "ufo-close folds" }
+    M = { require('ufo').closeAllFolds, "ufo-close folds" },
+    P = { require('ufo').peekFoldedLinesUnderCursor, "Quick peek into folded area" }
   }
   --m = {
   --  name="+lsp",

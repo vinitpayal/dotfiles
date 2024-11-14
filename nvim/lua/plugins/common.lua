@@ -31,7 +31,6 @@ return {
     { "neovim/nvim-lspconfig" },
     { "sunjon/shade.nvim" },
     { "L3MON4D3/LuaSnip" },
-    { 'kevinhwang91/nvim-ufo' },
     { 'princejoogie/dir-telescope.nvim' },
     { 'hrsh7th/cmp-nvim-lsp' },
     { 'hrsh7th/nvim-cmp' },
