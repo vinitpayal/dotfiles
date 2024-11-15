@@ -3,16 +3,14 @@ return {
         "folke/which-key.nvim",
         event = "VeryLazy"
     },
+    { 'nvim-tree/nvim-web-devicons' },
     { 'nvim-lua/plenary.nvim' },
     {
         "nvim-tree/nvim-tree.lua",
-        version = "*",
-        lazy = false,
-        dependencies = {
-          "nvim-tree/nvim-web-devicons",
-        }
+        config = function()
+          require("nvim-tree").setup({})
+        end
     },
-    { 'nvim-tree/nvim-web-devicons' },
     { 'nvim-treesitter/nvim-treesitter' },
     { 'danilamihailov/beacon.nvim' },
     { 'nvim-lualine/lualine.nvim' },
