@@ -67,6 +67,10 @@ wk.register({
       r = { require('goto-preview').goto_preview_references, "goto_preview_references" }
     },
     P = { require('goto-preview').close_all_win, "close all previews" }
+  },
+  v = {
+    name = "+vcs",
+    b = { [[:GitBlameToggle<CR>]], "toggle git blame" },
   }
   --m = {
   --  name="+lsp",

@@ -1,3 +1,5 @@
+vim.g.copilot_node_command = '~/.nvm/versions/node/v23.1.0/bin/node'
+
 return {
     {
         "folke/which-key.nvim",
