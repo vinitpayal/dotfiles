@@ -1,3 +1,5 @@
+vim.g.copilot_node_command = '~/.nvm/versions/node/v23.1.0/bin/node'
+
 return {
     {
         "folke/which-key.nvim",
@@ -16,7 +18,14 @@ return {
     { 'nvim-lualine/lualine.nvim' },
     { 'nvim-telescope/telescope.nvim' },
     { 'voldikss/vim-floaterm' },
-    { 'lukas-reineke/indent-blankline.nvim' },
+    --{ 'lukas-reineke/indent-blankline.nvim' },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        ---@module "ibl"
+        ---@type ibl.config
+        opts = {},
+    },
     { 'BurntSushi/ripgrep' },
     { 'sharkdp/fd' },
     { 'kdheepak/lazygit.nvim' },
