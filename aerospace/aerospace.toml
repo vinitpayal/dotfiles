@@ -66,10 +66,10 @@ preset = 'qwerty'
 [gaps]
 inner.horizontal = 0
 inner.vertical =   0
-outer.left =       5
-outer.bottom =     5
-outer.top =        0
-outer.right =      80
+outer.left =       0
+outer.bottom =     0
+outer.top =        0 
+outer.right =      0
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -148,7 +148,7 @@ alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 alt-shift-semicolon = 'mode service'
 
 alt-b = 'exec-and-forget open -a /Applications/Arc.app'
-alt-s = 'exec-and-forget open -a /Applications/Safari.app'
+# alt-s = 'exec-and-forget open -a /Applications/Safari.app'
 
 
 # 'service' binding mode declaration.
