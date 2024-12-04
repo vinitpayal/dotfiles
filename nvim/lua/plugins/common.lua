@@ -15,7 +15,11 @@ return {
     },
     { 'nvim-treesitter/nvim-treesitter' },
     { 'danilamihailov/beacon.nvim' },
-    { 'nvim-lualine/lualine.nvim' },
+    { 'nvim-lualine/lualine.nvim' ,
+      opts = {
+        theme = 'rose-pine'
+      }
+    },
     { 'nvim-telescope/telescope.nvim' },
     { 'voldikss/vim-floaterm' },
     --{ 'lukas-reineke/indent-blankline.nvim' },
@@ -46,5 +50,13 @@ return {
       "gennaro-tedesco/nvim-jqx",
       event = {"BufReadPost"},
       ft = { "json", "yaml" },
+    },
+    {
+      "rachartier/tiny-inline-diagnostic.nvim",
+      event = "VeryLazy", -- Or `LspAttach`
+      priority = 1000, -- needs to be loaded in first
+      config = function()
+          require('tiny-inline-diagnostic').setup()
+      end
     }
 }
