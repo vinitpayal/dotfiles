@@ -11,7 +11,7 @@ size = 14
 
 [font.bold]
 family = "JetBrains Mono"
-style = "Bold"
+style = "Regular"
 
 [font.glyph_offset]
 x = 1
@@ -19,11 +19,11 @@ y = 1
 
 [font.italic]
 family = "JetBrains Mono"
-style = "Italic"
+style = "Thin Italic"
 
 [font.normal]
 family = "JetBrains Mono"
-style = "Regular"
+style = "Light"
 
 [font.offset]
 x = 1
@@ -38,8 +38,8 @@ dynamic_title = true
 opacity = 0.99
 
 [window.padding]
-x = 4
-y = 6
+x = 2
+y = 2
 
 [colors.primary]
 background = '#f8f8f8'
