@@ -7,6 +7,7 @@ return {
     },
     { 'nvim-tree/nvim-web-devicons' },
     { 'nvim-lua/plenary.nvim' },
+    { 'rcarriga/nvim-notify' },
     {
         "nvim-tree/nvim-tree.lua",
         config = function()

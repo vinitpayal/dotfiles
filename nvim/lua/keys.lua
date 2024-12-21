@@ -5,105 +5,59 @@ local telescope_extensions = require('telescope').extensions
 vim.api.nvim_set_keymap('t', '<C-t>', '<C-\\><C-n>CR>', { noremap = true, silent = true })
 local wk = require("which-key")
 
-wk.register({
-  ["<leader>"] = {
-    name = "<leader>",
-    t = {
-      name = "+floaterm",
-      l = { [[:FloatermNew --height=0.98 --width=0.98 lazygit<CR>]], "lazygit" },
-      n = { [[:FloatermNew<CR>]], "new terminal" },
-      t = { [[:FloatermToggle<CR>]], "toggle terminal" },
-      m = { [[:FloatermNew --height=0.2 --wintype=split --position=bottom<CR>]], "mini term at bottom" },
-      r = { [[:FloatermNew --width=0.45 --wintype=vsplit<CR>]], "mini term at right half" }
-    },
-    f = {
-      name = "+telescope",
-      i = { builtin.help_tags, "telescope help" },
-      f = { builtin.find_files, "search files" },
-      k = { builtin.live_grep, "search keyword" },
-      m = { builtin.lsp_dynamic_workspace_symbols, "search methods" },
-      h = { builtin.resume, "search history" }, 
-      b = { builtin.buffers, "search buffers" },
-      t = { builtin.treesitter,"search treesitter"},
-      d = {
-          name = "+dir",
-          k = { telescope_extensions.dir.live_grep, "search keyword in dir" },
-          f = { telescope_extensions.dir.find_files, "search files in dir" },
-      },
-      l = {
-        name = "+lsp",
-        r = { builtin.lsp_references, "lsp references" },
-        i = { builtin.lsp_implementations, "lsp implementations" },
-        d = { builtin.lsp_definitions, "lsp definitions" }
-      },
-      g = {
-        name = "+git",
-        b = { builtin.git_branches, "git branches" },
-        c = { builtin.git_bcommits, "git current file commits" },
-        s = { builtin.git_status, "git status" },
-      },
-    },
-    u = { [[:DBUIToggle<CR>]], "toggle dbui" },
-    n = { [[:NvimTreeToggle<CR>]], "toggle nvim tree" },
-    p = { [[:PackerSync<CR>]], "sync packer" },
-    c = {
-        name = "+clipboard(neoclip)",
-        h = { [[:lua require('telescope').extensions.neoclip.default()<CR>]], "search clipboard history" }
-    } 
-  },
-  z = {
-    name = "+fold",
-    R = { require('ufo').openAllFolds, "ufo-open folds" },
-    M = { require('ufo').closeAllFolds, "ufo-close folds" },
-    P = { require('ufo').peekFoldedLinesUnderCursor, "Quick peek into folded area" }
-  },
-  g = {
-    name = "+goto",
-    p = {
-      name = "+preview-plugin",
-      d = { require('goto-preview').goto_preview_definition, "goto_preview_definition" },
-      t = { require('goto-preview').goto_preview_type_definition, "goto_preview_type_definition" },
-      i = { require('goto-preview').goto_preview_implementation, "goto_preview_implementation" },
-      r = { require('goto-preview').goto_preview_references, "goto_preview_references" }
-    },
-    P = { require('goto-preview').close_all_win, "close all previews" }
-  },
-  v = {
-    name = "+vcs",
-    b = { [[:GitBlameToggle<CR>]], "toggle git blame" },
-  }
-  --m = {
-  --  name="+lsp",
-  --  a = { vim.lsp.buf.code_action, "code action" },
-  --  A = { vim.lsp.buf.range_code_action, "range code action" },
-  --  d = { vim.lsp.buf.definition, "go to definition" },
-  --  D = { vim.lsp.buf.declaration, "go to declaration" },
-  --  r = { vim.lsp.buf.references, "go to references" },
-  --  R = { vim.lsp.buf.rename, "rename" },
-  --  i = { vim.lsp.buf.implementation, "go to implementation" },
-  --  s = { vim.lsp.buf.signature_help, "signature help" },
-  --  t = { vim.lsp.buf.type_definition, "go to type definition" },
-  --  f = { vim.lsp.buf.formatting, "format" },
-  --  F = { vim.lsp.buf.formatting_sync, "format sync" },
-  --  e = { vim.lsp.diagnostic.show_line_diagnostics, "show line diagnostics" },
-  --  E = { vim.lsp.diagnostic.set_loclist, "set loclist" },
-  --  p = { vim.lsp.diagnostic.goto_prev, "go to previous diagnostic" },
-  --  n = { vim.lsp.diagnostic.goto_next, "go to next diagnostic" },
-  --  q = { vim.lsp.diagnostic.set_qflist, "set qflist" },
-  --  l = { vim.lsp.diagnostic.show_line_diagnostics, "show line diagnostics" },
-  --},
-  --g = {
-  --  b = { [[:GitBlameToggle<CR>]], "toggle git blame" },
-  --  c = { builtin.git_bcommits, "current file commits" },
-  --  a = { builtin.git_commits, "all commits" },
-  --  s = { builtin.git_status, "git status" },
-  --  l = { builtin.git_branches, "git branches" },
-  --  z = {
-  --    R = { require('ufo').openAllFolds, "ufo-open folds" },
-  --    M = { require('ufo').closeAllFolds, "ufo-close folds" }
-  --  }
-  --},
-})
+wk.add({
+    { "<leader>", group = "<leader>" },
+    { "<leader>c", group = "clipboard(neoclip)" },
+    { "<leader>ch", ":lua require('telescope').extensions.neoclip.default()<CR>", desc = "search clipboard history" },
+
+    { "<leader>f", group = "telescope" },
+    { "<leader>ff", builtin.find_files, desc = "search files" },
+    { "<leader>fk", builtin.live_grep, desc = "search keyword" },
+    { "<leader>fm", builtin.lsp_dynamic_workspace_symbols, desc = "search methods" },
+    { "<leader>fb", builtin.buffers, desc = "search buffers" },
+    { "<leader>ft", builtin.treesitter, desc = "search treesitter" },
+
+    { "<leader>fd", group = "dir" },
+    { "<leader>fdf", telescope_extensions.dir.find_files, desc = "search files in dir" },
+    { "<leader>fdk", telescope_extensions.dir.live_grep, desc = "search keyword in dir" },
+
+    { "<leader>fg", group = "git" },
+    { "<leader>fgb", builtin.git_branches, desc = "git branches" },
+    { "<leader>fgc", builtin.git_bcommits, desc = "git current file commits" },
+    { "<leader>fgs", builtin.git_status, desc = "git status" },
+    { "<leader>fh", builtin.resume, desc = "search history" },
+    { "<leader>fi", builtin.help_tags, desc = "telescope help" },
+    { "<leader>fld", builtin.lsp_definitions, desc = "lsp definitions" },
+
+    { "<leader>fl", group = "lsp" },
+    { "<leader>fli", builtin.lsp_implementations, desc = "lsp implementations" },
+    { "<leader>flr", builtin.lsp_references, desc = "lsp references" },
+
+    { "<leader>n", ":NvimTreeToggle<CR>", desc = "toggle nvim tree" },
+
+    { "<leader>t", group = "floaterm" },
+    { "<leader>tl", ":FloatermNew --height=0.98 --width=0.98 lazygit<CR>", desc = "lazygit" },
+    { "<leader>tm", ":FloatermNew --height=0.2 --wintype=split --position=bottom<CR>", desc = "mini term at bottom" },
+    { "<leader>tn", ":FloatermNew<CR>", desc = "new terminal" },
+    { "<leader>tr", ":FloatermNew --width=0.45 --wintype=vsplit<CR>", desc = "mini term at right half" },
+    { "<leader>tt", ":FloatermToggle<CR>", desc = "toggle terminal" },
+    -- { "<leader>u", ":DBUIToggle<CR>", desc = "toggle dbui" },
+    { "g", group = "goto" },
+    { "gp", group = "preview-plugin" },
+    { "gpd", require('goto-preview').goto_preview_definition, desc = "goto_preview_definition" },
+    { "gpi", require('goto-preview').goto_preview_implementation, desc = "goto_preview_implementation" },
+    { "gpr", require('goto-preview').goto_preview_references, desc = "goto_preview_references" },
+    { "gpt", require('goto-preview').goto_preview_type_definition, desc = "goto_preview_type_definition" },
+    { "gP", require('goto-preview').close_all_win, desc = "close all previews" },
+
+    { "v", group = "vcs" },
+    { "vb", ":GitBlameToggle<CR>", desc = "toggle git blame" },
+
+    { "z", group = "fold" },
+    { "zM", require('ufo').closeAllFolds, desc = "ufo-close folds" },
+    { "zP", require('ufo').peekFoldedLinesUnderCursor, desc = "Quick peek into folded area" },
+    { "zR", require('ufo').openAllFolds, desc = "ufo-open folds" },
+  })
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
