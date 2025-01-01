@@ -156,7 +156,20 @@ eval "$(zoxide init zsh)"
 
 alias cd="z"
 
+# --- Node Version Manager ---
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
 # Import ~/.zshrc_secrets if it exists
 if [ -f "$HOME/.zshrc_secrets" ]; then
   source "$HOME/.zshrc_secrets"
+fi
+
+# Import ~/.zshrc_custom if it exists
+# This is for custom configurations that you don't want to commit to git
+if [ -f "$HOME/.zshrc_custom" ]; then
+  source "$HOME/.zshrc_custom"
 fi
