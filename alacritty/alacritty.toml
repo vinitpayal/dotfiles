@@ -7,7 +7,7 @@ duration = 300
 title = "Alacritty"
 
 [font]
-size = 14
+size = 12
 
 [font.bold]
 family = "JetBrains Mono"
