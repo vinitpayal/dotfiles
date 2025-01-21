@@ -25,9 +25,9 @@ local languageServers = {
   "lua_ls",
   -- "tsserver",
   "ts_ls",
-  -- "pylsp",
-  "dockerls",
-  "docker_compose_language_service",
+  "pylsp",
+  -- "dockerls",
+  -- "docker_compose_language_service",
   "marksman",
   --"sqlls",
   "bashls",
@@ -46,18 +46,18 @@ for _, lsp in ipairs(languageServers) do
   }
 end
 
-lspconfig.pylsp.setup {
-  capabilities = capabilities,
-  settings = {
-    pylsp = {
-      plugins = {
-        pycodestyle = {
-          ignore = { 'E501' },
-        },
-      },
-    },
-  },
-}
+-- lspconfig.pylsp.setup {
+--   capabilities = capabilities,
+--   settings = {
+--     pylsp = {
+--       plugins = {
+--         pycodestyle = {
+--           ignore = { 'E501' },
+--         },
+--       },
+--     },
+--   },
+-- }
 
 -- nvim-cmp setup
 cmp.setup { 
