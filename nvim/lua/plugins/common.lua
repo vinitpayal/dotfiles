@@ -16,11 +16,6 @@ return {
     },
     { 'nvim-treesitter/nvim-treesitter' },
     { 'danilamihailov/beacon.nvim' },
-    { 'nvim-lualine/lualine.nvim' ,
-      opts = {
-        theme = 'rose-pine'
-      }
-    },
     { 'nvim-telescope/telescope.nvim' },
     { 'voldikss/vim-floaterm' },
     --{ 'lukas-reineke/indent-blankline.nvim' },
