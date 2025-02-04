@@ -57,6 +57,11 @@ wk.add({
     { "zM", require('ufo').closeAllFolds, desc = "ufo-close folds" },
     { "zP", require('ufo').peekFoldedLinesUnderCursor, desc = "Quick peek into folded area" },
     { "zR", require('ufo').openAllFolds, desc = "ufo-open folds" },
+
+    {"+", ':exe "vertical resize " . (winwidth(0) * 3/2)<CR>'},
+    {"-", ':exe "vertical resize " . (winwidth(0) * 2/3)<CR>'},
+    {"]", ':exe "resize " . (winheight(0) * 3/2)<CR>'},
+    {"[", ':exe "resize " . (winheight(0) * 2/3)<CR>'}
   })
 
 -- Use LspAttach autocommand to only map the following keys
