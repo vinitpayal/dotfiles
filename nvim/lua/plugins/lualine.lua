@@ -25,7 +25,7 @@ return {
         lualine_c = {
           {
             'filename',
-            file_status = false,
+            file_status = true,
             path = 1,
             symbols = {
               modified = '[+]',
@@ -40,7 +40,7 @@ return {
       inactive_sections = {
         lualine_a = {},
         lualine_b = {},
-        lualine_c = {{ 'filename', path = 1 }},
+        lualine_c = {{ 'filename', path = 1, file_status = true }},
         lualine_x = {'location'},
         lualine_y = {},
         lualine_z = { 'datetime' }
