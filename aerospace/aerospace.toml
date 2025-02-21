@@ -58,7 +58,7 @@ preset = 'qwerty'
 [gaps]
 inner.horizontal = 2
 inner.vertical =   2
-outer.left =       2
+outer.left =       5
 outer.bottom =     2
 outer.top =        0
 outer.right =      2
@@ -212,10 +212,14 @@ shift-down = ['volume set 0', 'mode main']
 
 [[on-window-detected]]
 if.app-id = 'com.openai.chat'
-run = [ 'move-node-to-workspace C' ]
+run = [ 'move-node-to-workspace 2' ]
 
 [[on-window-detected]]
 if.app-id = 'org.allacritty'
+run = ["move-node-to-workspace 1"]
+
+[[on-window-detected]]
+if.app-id = 'com.todesktop.230313mzl4w4u92'
 run = ["move-node-to-workspace 1"]
 
 [[on-window-detected]]
@@ -223,8 +227,20 @@ if.app-id = 'com.jetbrains.datagrip'
 run = ["move-node-to-workspace T"]
 
 [[on-window-detected]]
+if.app-id = 'com.figma.Desktop '
+run = ["move-node-to-workspace T"]
+
+[[on-window-detected]]
+if.app-id = 'notion.id'
+run = ["move-node-to-workspace T"]
+
+[[on-window-detected]]
 if.app-id = 'net.whatsapp.WhatsApp'
 run = ["move-node-to-workspace C"]
+
+[[on-window-detected]]
+if.app-id = 'com.hnc.Discord '
+run = [ 'move-node-to-workspace C' ]
 
 [[on-window-detected]]
 if.app-id = 'company.thebrowser.Browser'
