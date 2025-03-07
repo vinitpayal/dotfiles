@@ -173,3 +173,7 @@ fi
 if [ -f "$HOME/.zshrc_custom" ]; then
   source "$HOME/.zshrc_custom"
 fi
+
+if [ -f "$HOME/.zsh_aliases" ]; then
+  source "$HOME/.zsh_aliases"
+fi
