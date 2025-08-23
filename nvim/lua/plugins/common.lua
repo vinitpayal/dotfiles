@@ -41,7 +41,6 @@ return {
     { 'saadparwaiz1/cmp_luasnip' },
     { "0oAstro/dim.lua" },
     { "AckslD/nvim-neoclip.lua" },
-    { "github/copilot.vim" },
     {
       "gennaro-tedesco/nvim-jqx",
       event = {"BufReadPost"},
