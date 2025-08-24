@@ -12,11 +12,11 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 end,
 })
 
-vim.api.nvim_create_autocmd("VimEnter", {
-  pattern = "*",
-  desc = "Open NERDTree on VimEnter",
-  callback = function()
-    vim.cmd("NERDTree")
-  end,
-})
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--   pattern = "*",
+--   desc = "Open NERDTree on VimEnter",
+--   callback = function()
+--     vim.cmd("NERDTree")
+--   end,
+-- })
 
