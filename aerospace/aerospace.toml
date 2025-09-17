@@ -289,3 +289,7 @@ run = ["move-node-to-workspace T"]
 [[on-window-detected]]
 if.app-id = 'com.postmanlabs.mac'
 run = ["move-node-to-workspace T"]
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = [ 'layout floating' ]
