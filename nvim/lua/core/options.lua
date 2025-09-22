@@ -27,7 +27,7 @@ opt.signcolumn = "yes"     -- str:  Show the sign column
 
 -- [[ Filetypes ]]
 opt.encoding = 'utf8'     -- str:  String encoding to use
-opt.fileencoding = 'utf8' -- str:  File encoding to use
+-- Note: fileencoding is buffer-local and set automatically
 
 -- [[ Theme ]]
 opt.syntax = "ON"        -- str:  Allow syntax highlighting

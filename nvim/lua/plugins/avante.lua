@@ -1,17 +1,25 @@
 return {
   "yetone/avante.nvim",
-  event = "VeryLazy",
   lazy = false,
   version = false, -- set this if you want to always pull the latest change
+  config = function(_, opts)
+    -- Disable auto keymaps to avoid conflicts
+    -- opts.behaviour = opts.behaviour or {}
+    -- opts.behaviour.auto_set_keymaps = false
+    
+    require("avante").setup(opts)
+  end,
   opts = {
     provider = "openai",
-    openai = {
-      model = "gpt-5"
+    providers = {
+      openai = {
+        model = "gpt-4o",
+      },
     },
     behaviour = {
       auto_suggestions = true, -- Experimental stage
       auto_set_highlight_group = true,
-      auto_set_keymaps = true,
+      auto_set_keymaps = true, -- Disable to avoid conflicts
       auto_apply_diff_after_generation = false,
       support_paste_from_clipboard = true,
       minimize_diff = true, -- Whether to remove unchanged lines when applying a code block
@@ -24,14 +32,14 @@ return {
     "stevearc/dressing.nvim",
     "nvim-lua/plenary.nvim",
     "MunifTanjim/nui.nvim",
-    "zbirenbaum/copilot.lua", -- for providers='copilot'
-    {
-      -- Make sure to set this up properly if you have lazy=true
-      'MeanderingProgrammer/render-markdown.nvim',
-      opts = {
-        file_types = { "markdown", "Avante" },
-      },
-      ft = { "markdown", "Avante" },
-    },
+    -- "zbirenbaum/copilot.lua", -- for providers='copilot'
+    -- {
+    --   -- Make sure to set this up properly if you have lazy=true
+    --   'MeanderingProgrammer/render-markdown.nvim',
+    --   opts = {
+    --     file_types = { "markdown", "Avante" },
+    --   },
+    --   ft = { "markdown", "Avante" },
+    -- },
   },
 }

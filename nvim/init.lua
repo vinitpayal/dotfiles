@@ -1,3 +1,6 @@
+vim.g.mapleader = ","
+vim.g.localleader = "\\"
+
 -- import ---
 require('dependencies')
 require('core.options')
