@@ -1,13 +1,20 @@
---[[ opts.lua ]]
+--[[ Core Neovim Options ]]
 local opt = vim.opt
 
---if (has("termguicolors"))
---  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
---  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
---  set termguicolors
---endif
---
+-- [[ Leader Keys ]]
+-- These keybindings need to be defined before plugins are loaded
+vim.g.mapleader = ","
+vim.g.localleader = "\\"
 
+-- [[ Plugin Settings ]]
+-- Git blame configuration
+vim.g.gitblame_enabled = 0
+vim.g.gitblame_date_format = '%d/%b/%Y'
+vim.g.gitblame_message_template = '<author> • <date> • <summary>'
+
+vim.o.background = "light" -- or "light" for light mode
+
+-- [[ General Settings ]]
 opt.clipboard = 'unnamedplus'
 opt.list = true
 

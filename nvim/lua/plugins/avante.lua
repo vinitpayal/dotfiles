@@ -6,10 +6,10 @@ return {
   opts = {
     provider = "openai",
     openai = {
-      model = "gpt-4o"
+      model = "gpt-5"
     },
     behaviour = {
-      auto_suggestions = false, -- Experimental stage
+      auto_suggestions = true, -- Experimental stage
       auto_set_highlight_group = true,
       auto_set_keymaps = true,
       auto_apply_diff_after_generation = false,
