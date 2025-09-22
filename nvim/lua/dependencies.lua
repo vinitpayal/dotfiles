@@ -25,12 +25,15 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     -- import your plugins
-    { import = "plugins" },
-    { import = "plugins.themes" }
+    { import = "plugins/ui" },
+    { import = "plugins/editor" },
+    { import = "plugins/lsp" },
+    { import = "plugins/tools" },
+    { import = "plugins/utils" }
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
-  install = { colorscheme = { "gruvbox" } },
+  install = { colorscheme = { "catppuccin" } },
   -- automatically check for plugin updates
   checker = { enabled = false },
 })

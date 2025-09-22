@@ -11,13 +11,11 @@ table.insert(vim._so_trails, "/?.dylib")
 
 -- import ---
 require('dependencies')
-require('opts')
-require('keys')
-require('lsp')
-require("tmux")
-require("autogroups")
+require('core.options')
+require('core.keymaps')
+require('plugins.lsp')
+require('core.autocmds')
 
 vim.o.background = "light" -- or "light" for light mode
 --vim.cmd([[colorscheme gruvbox]])
-vim.cmd("colorscheme catppuccin")
 

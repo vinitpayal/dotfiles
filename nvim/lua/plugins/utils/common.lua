@@ -1,6 +1,9 @@
 vim.g.copilot_node_command = '~/.nvm/versions/node/v23.1.0/bin/node'
 
 return {
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000, config = function()
+        vim.cmd.colorscheme "catppuccin"
+    end },
     {
         "folke/which-key.nvim",
         event = "VeryLazy"
@@ -16,6 +19,18 @@ return {
     },
     { 'nvim-treesitter/nvim-treesitter' },
     { 'danilamihailov/beacon.nvim' },
+    {  "zbirenbaum/copilot.lua" },
+    {
+      "zbirenbaum/copilot.lua",
+      requires = {
+        "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality
+      },
+      cmd = "Copilot",
+      event = "InsertEnter",
+      config = function()
+        require("copilot").setup({})
+      end,
+    },
     { 'nvim-telescope/telescope.nvim' },
     { 'voldikss/vim-floaterm' },
     --{ 'lukas-reineke/indent-blankline.nvim' },
@@ -39,6 +54,9 @@ return {
     { 'hrsh7th/cmp-nvim-lsp' },
     { 'hrsh7th/nvim-cmp' },
     { 'saadparwaiz1/cmp_luasnip' },
+    { 'kevinhwang91/nvim-ufo' },
+    { 'kevinhwang91/promise-async' },
+    { 'rmagatti/goto-preview' },
     { "0oAstro/dim.lua" },
     { "AckslD/nvim-neoclip.lua" },
     {
