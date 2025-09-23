@@ -2,7 +2,7 @@
 local M = {}
 
 -- Enhanced capabilities using native LSP and completion
-M.capabilities = vim.tbl_deep_extend("force", 
+M.capabilities = vim.tbl_deep_extend("force",
   vim.lsp.protocol.make_client_capabilities(),
   require('cmp_nvim_lsp').default_capabilities()
 )
@@ -28,15 +28,15 @@ M.on_attach = function(client, bufnr)
     client.server_capabilities.documentFormattingProvider = false
     client.server_capabilities.documentRangeFormattingProvider = false
   end
-  
+
   -- Load LSP keymaps
   require('plugins.lsp.config.keymaps').setup(bufnr)
-  
+
   -- Enable inlay hints if supported (Neovim 0.10+)
   if client.supports_method and client.supports_method('textDocument/inlayHint') then
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end
-  
+
   -- Enable document highlighting if supported
   if client.server_capabilities.documentHighlightProvider then
     local group = vim.api.nvim_create_augroup("LSPDocumentHighlight", { clear = false })
@@ -60,7 +60,10 @@ end
 
 -- Diagnostic config (global)
 vim.diagnostic.config({
-  virtual_text = { prefix = '●' },
+  virtual_text = {
+      prefix = '●',
+      severity = vim.diagnostic.severity.ERROR,  -- Show only errors as virtual text
+    },
   float = { border = 'rounded', source = 'always' },
   severity_sort = true,
   update_in_insert = false,
