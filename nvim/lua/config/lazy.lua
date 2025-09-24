@@ -22,6 +22,10 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.ai.supermaven" },
     { import = "lazyvim.plugins.extras.coding.nvim-cmp" },
 
+    -- Language extras
+    { import = "lazyvim.plugins.extras.lang.typescript" }, -- JavaScript/TypeScript
+    { import = "lazyvim.plugins.extras.lang.python" }, -- Python
+
     -- import/override with your plugins
     { import = "plugins" },
   },
