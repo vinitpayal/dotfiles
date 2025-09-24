@@ -31,13 +31,22 @@ return {
     },
     opts = {
       -- add any opts here
-      provider = "openai", -- Using OpenAI provider
-      auto_suggestions = true,
-      openai = {
-        endpoint = "https://api.openai.com/v1",
-        model = "gpt-4o",
-        temperature = 0,
-        max_tokens = 4096,
+      provider = "openai", -- Default provider
+      providers = {
+        openai = {
+          endpoint = "https://api.openai.com/v1",
+          model = "gpt-4o",
+          engine = {
+            temperature = 0,
+            max_tokens = 4096,
+          },
+        },
+      },
+      behaviour = {
+        auto_suggestions = false,
+      },
+      input = {
+        provider = "dressing", -- or "snacks" if you have it installed
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
@@ -70,12 +79,12 @@ return {
       },
       {
         -- Make sure to set this up properly if you have lazy=true
-        'MeanderingProgrammer/render-markdown.nvim',
+        "MeanderingProgrammer/render-markdown.nvim",
         opts = {
           file_types = { "markdown", "Avante" },
         },
         ft = { "markdown", "Avante" },
       },
     },
-  }
+  },
 }
