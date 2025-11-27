@@ -21,6 +21,7 @@ require("lazy").setup({
 
     { import = "lazyvim.plugins.extras.ai.supermaven" },
     { import = "lazyvim.plugins.extras.coding.nvim-cmp" },
+    { import = "lazyvim.plugins.extras.dap.core" }, -- Debug Adapter Protocol
 
     -- Language extras
     { import = "lazyvim.plugins.extras.lang.typescript" }, -- JavaScript/TypeScript
