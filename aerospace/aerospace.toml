@@ -290,6 +290,11 @@ run = ["move-node-to-workspace T"]
 if.app-id = 'com.postmanlabs.mac'
 run = ["move-node-to-workspace T"]
 
+
 [[on-window-detected]]
-if.app-id = 'com.apple.finder'
-run = [ 'layout floating' ]
+if.app-id = 'com.apple.Numbers'
+run = ["move-node-to-workspace N", "workspace N"]
+
+#[[on-window-detected]]
+#if.app-id = 'com.apple.finder'
+#run = [ 'layout floating' ]
