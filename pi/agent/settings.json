@@ -5,5 +5,13 @@
   "defaultModel": "claude-sonnet-4-6",
   "theme": "light",
   "hideThinkingBlock": false,
-  "collapseChangelog": false
+  "collapseChangelog": false,
+  "packages": [
+    {
+      "source": "git:github.com/tmustier/pi-extensions",
+      "extensions": [
+        "usage-extension/index.ts"
+      ]
+    }
+  ]
 }
