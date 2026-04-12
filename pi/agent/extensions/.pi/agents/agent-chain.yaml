@@ -1,0 +1,14 @@
+plan-review-plan:
+  description: "Iterative planning — plan, critique, refine."
+  # Chain-level model: applies to all steps unless overridden per step.
+  # Priority: per-step model > chain-level model > agent .md frontmatter model > runtime default.
+  model: "openrouter/google/gemini-2.5-pro"
+  steps:
+    - agent: planner
+      prompt: "You are Planner. Review the user's task below and produce a numbered, actionable implementation plan.\n\nTask:\n$ORIGINAL\n\nReturn only the plan."
+    - agent: plan-reviewer
+      # Per-step override: use a different (faster/cheaper) model for the review step.
+      model: "openrouter/anthropic/claude-sonnet-4-5"
+      prompt: "You are Plan Reviewer. Critically evaluate the planner's proposal below.\n\nPlan:\n$INPUT\n\nWrite constructive feedback covering: summary, issues or missing pieces, risks, and specific required improvements."
+    - agent: planner
+      prompt: "You are Planner. Refine your implementation plan based on the reviewer feedback below.\n\nReviewer feedback:\n$INPUT\n\nOriginal task:\n$ORIGINAL\n\nProduce an updated numbered plan that incorporates the feedback. If the feedback indicates the plan is approved, restate the plan clearly."

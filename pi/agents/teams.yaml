@@ -1,0 +1,11 @@
+full:
+  - scout
+  - planner
+  - builder
+  - reviewer
+  - red-team
+
+plan-build:
+  - planner
+  - builder
+  - reviewer

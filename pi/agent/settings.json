@@ -1,0 +1,9 @@
+{
+  "lastChangelogVersion": "0.66.1",
+  "defaultThinkingLevel": "medium",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-sonnet-4-6",
+  "theme": "light",
+  "hideThinkingBlock": false,
+  "collapseChangelog": false
+}
