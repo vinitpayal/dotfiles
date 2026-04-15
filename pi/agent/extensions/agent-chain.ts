@@ -28,7 +28,7 @@ import { spawn } from "child_process";
 import { readFileSync, existsSync, readdirSync, mkdirSync, unlinkSync } from "fs";
 import { join, resolve } from "path";
 import { homedir } from "os";
-import { applyExtensionDefaults } from "./utils/themeMap.ts";
+//import { applyExtensionDefaults } from "./utils/themeMap.ts";
 
 // ── Types ────────────────────────────────────────
 
@@ -59,12 +59,19 @@ interface StepState {
   status: "pending" | "running" | "done" | "error";
   elapsed: number;
   lastWork: string;
+  model: string;
 }
 
 // ── Display Name Helper ──────────────────────────
 
 function displayName(name: string): string {
   return name.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+}
+
+function shortModel(model: string): string {
+  if (!model) return "—";
+  const parts = model.split("/");
+  return parts[parts.length - 1];
 }
 
 // ── Shared Helpers ──────────────────────────────
@@ -279,12 +286,16 @@ export default function (pi: ExtensionAPI) {
 
   function activateChain(chain: ChainDef) {
     activeChain = chain;
-    stepStates = chain.steps.map(s => ({
-      agent: s.agent,
-      status: "pending" as const,
-      elapsed: 0,
-      lastWork: "",
-    }));
+    stepStates = chain.steps.map(s => {
+      const agentDef = allAgents.get(s.agent.toLowerCase());
+      return {
+        agent: s.agent,
+        status: "pending" as const,
+        elapsed: 0,
+        lastWork: "",
+        model: s.model ?? chain.model ?? agentDef?.model ?? "",
+      };
+    });
     // Skip widget re-registration if reset is pending — let before_agent_start handle it
     if (!pendingReset) {
       updateWidget();
@@ -308,6 +319,10 @@ export default function (pi: ExtensionAPI) {
     const nameStr = theme.fg("accent", theme.bold(truncate(name, w)));
     const nameVisible = Math.min(name.length, w);
 
+    const modelText = shortModel(state.model);
+    const modelStr = theme.fg("dim", truncate(modelText, w));
+    const modelVisible = Math.min(modelText.length, w);
+
     const statusStr = `${statusIcon} ${state.status}`;
     const timeStr = state.status !== "pending" ? ` ${Math.round(state.elapsed / 1000)}s` : "";
     const statusLine = theme.fg(statusColor, statusStr + timeStr);
@@ -326,6 +341,7 @@ export default function (pi: ExtensionAPI) {
     return [
       theme.fg("dim", top),
       border(" " + nameStr, 1 + nameVisible),
+      border(" " + modelStr, 1 + modelVisible),
       border(" " + statusLine, 1 + statusVisible),
       border(" " + workLine, 1 + workVisible),
       theme.fg("dim", bot),
@@ -349,7 +365,7 @@ export default function (pi: ExtensionAPI) {
           const cols = stepStates.length;
           const totalArrowWidth = arrowWidth * (cols - 1);
           const colWidth = Math.max(12, Math.floor((width - totalArrowWidth) / cols));
-          const arrowRow = 2; // middle of 5-line card (0-indexed)
+          const arrowRow = 3; // middle of 6-line card (0-indexed)
 
           const cards = stepStates.map(s => renderCard(s, colWidth, theme));
           const cardHeight = cards[0].length;
@@ -397,6 +413,9 @@ export default function (pi: ExtensionAPI) {
     const agentSessionFile = join(sessionDir, `chain-${agentKey}.json`);
     const hasSession = agentSessions.get(agentKey);
 
+    const state = stepStates[stepIndex];
+    state.model = model;
+
     const args = [
       "--mode", "json",
       "-p",
@@ -415,7 +434,6 @@ export default function (pi: ExtensionAPI) {
 
     const textChunks: string[] = [];
     const startTime = Date.now();
-    const state = stepStates[stepIndex];
 
     return new Promise((resolve) => {
       const proc = spawn("pi", args, {
@@ -504,12 +522,16 @@ export default function (pi: ExtensionAPI) {
     const chainStart = Date.now();
 
     // Reset all steps to pending
-    stepStates = activeChain.steps.map(s => ({
-      agent: s.agent,
-      status: "pending" as const,
-      elapsed: 0,
-      lastWork: "",
-    }));
+    stepStates = activeChain.steps.map(s => {
+      const agentDef = allAgents.get(s.agent.toLowerCase());
+      return {
+        agent: s.agent,
+        status: "pending" as const,
+        elapsed: 0,
+        lastWork: "",
+        model: s.model ?? activeChain!.model ?? agentDef?.model ?? "",
+      };
+    });
     updateWidget();
 
     let input = task;
@@ -703,12 +725,16 @@ export default function (pi: ExtensionAPI) {
     if (pendingReset && activeChain) {
       pendingReset = false;
       widgetCtx = _ctx;
-      stepStates = activeChain.steps.map(s => ({
-        agent: s.agent,
-        status: "pending" as const,
-        elapsed: 0,
-        lastWork: "",
-      }));
+      stepStates = activeChain.steps.map(s => {
+        const agentDef = allAgents.get(s.agent.toLowerCase());
+        return {
+          agent: s.agent,
+          status: "pending" as const,
+          elapsed: 0,
+          lastWork: "",
+          model: s.model ?? activeChain!.model ?? agentDef?.model ?? "",
+        };
+      });
       updateWidget();
     }
 
@@ -783,7 +809,7 @@ ${agentCatalog}
   // ── Session Start ───────────────────────────
 
   pi.on("session_start", async (_event, _ctx) => {
-    applyExtensionDefaults(import.meta.url, _ctx);
+    //applyExtensionDefaults(import.meta.url, _ctx);
     // Clear widget with both old and new ctx — one of them will be valid
     if (widgetCtx) {
       widgetCtx.ui.setWidget("agent-chain", undefined);
