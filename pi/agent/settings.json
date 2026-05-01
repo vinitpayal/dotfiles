@@ -13,6 +13,7 @@
         "usage-extension/index.ts",
         "+agent-guidance/agent-guidance.ts"
       ]
-    }
+    },
+    "npm:@juicesharp/rpiv-ask-user-question"
   ]
 }

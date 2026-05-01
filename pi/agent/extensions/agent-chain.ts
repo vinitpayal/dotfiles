@@ -17,6 +17,8 @@
  * Commands:
  *   /chain             — switch active chain
  *   /chain-list        — list all available chains
+ *   /chain-model       — set runtime model overrides per step
+ *   /chain-answer      — answer pending clarification questions and resume
  *
  * Usage: pi -e extensions/agent-chain.ts
  */
@@ -62,6 +64,22 @@ interface StepState {
   model: string;
 }
 
+interface ClarificationState {
+  chainName: string;
+  stepIndex: number;
+  inputBeforeStep: string;
+  originalPrompt: string;
+  rounds: number;
+  questions: string[];
+}
+
+interface ChainDecision {
+  status: "READY" | "NEEDS_CLARIFICATION";
+  questions: string[];
+  assumptions: string[];
+  cleanedOutput: string;
+}
+
 // ── Display Name Helper ──────────────────────────
 
 function displayName(name: string): string {
@@ -89,6 +107,64 @@ function clean(value?: string): string | undefined {
     trimmed = trimmed.slice(1, -1).trim();
   }
   return trimmed || undefined;
+}
+
+const CHAIN_DECISION_OPEN = "<CHAIN_DECISION>";
+const CHAIN_DECISION_CLOSE = "</CHAIN_DECISION>";
+const MAX_CLARIFICATION_ROUNDS = 3;
+
+const plannerClarificationContract = `
+
+Before ending, append this block exactly once:
+<CHAIN_DECISION>
+status: READY | NEEDS_CLARIFICATION
+questions:
+- question 1
+- question 2
+assumptions_if_unanswered:
+- assumption 1
+</CHAIN_DECISION>
+
+Rules:
+- Ask at most 3 high-impact questions.
+- Use NEEDS_CLARIFICATION only if answers materially change implementation.
+- Use READY when you can proceed safely.
+- Keep the normal planning output above this block.`;
+
+function parseDecisionList(block: string, section: string): string[] {
+  const sectionMatch = block.match(new RegExp(`${section}\\s*:\\s*([\\s\\S]*?)(?=\\n\\s*[a-zA-Z_]+\\s*:|$)`, "i"));
+  if (!sectionMatch) return [];
+  return sectionMatch[1]
+    .split("\n")
+    .map(l => l.trim())
+    .filter(l => l.startsWith("-"))
+    .map(l => l.replace(/^-\s*/, "").trim())
+    .filter(Boolean);
+}
+
+function parseChainDecision(output: string): ChainDecision | undefined {
+  const start = output.indexOf(CHAIN_DECISION_OPEN);
+  const end = output.indexOf(CHAIN_DECISION_CLOSE);
+  if (start === -1 || end === -1 || end < start) return undefined;
+
+  const block = output.slice(start + CHAIN_DECISION_OPEN.length, end).trim();
+  const cleanedOutput = (output.slice(0, start) + output.slice(end + CHAIN_DECISION_CLOSE.length)).trim();
+
+  const statusMatch = block.match(/status\s*:\s*([A-Z_]+)/i);
+  const rawStatus = statusMatch?.[1]?.toUpperCase();
+  if (rawStatus !== "READY" && rawStatus !== "NEEDS_CLARIFICATION") return undefined;
+
+  return {
+    status: rawStatus,
+    questions: parseDecisionList(block, "questions"),
+    assumptions: parseDecisionList(block, "assumptions_if_unanswered"),
+    cleanedOutput,
+  };
+}
+
+function injectPlannerContract(step: ChainStep, prompt: string): string {
+  if (step.agent.toLowerCase() !== "planner") return prompt;
+  return prompt.includes(CHAIN_DECISION_OPEN) ? prompt : `${prompt}${plannerClarificationContract}`;
 }
 
 // ── Chain YAML Parser ────────────────────────────
@@ -266,6 +342,9 @@ export default function (pi: ExtensionAPI) {
   let chainModelOverride: string | undefined;
   const stepModelOverrides: Map<number, string> = new Map();
 
+  // Clarification loop state (session-scoped)
+  let pendingClarification: ClarificationState | null = null;
+
   function loadChains(cwd: string) {
     sessionDir = join(cwd, ".pi", "agent-sessions");
     if (!existsSync(sessionDir)) {
@@ -309,6 +388,7 @@ export default function (pi: ExtensionAPI) {
 
   function activateChain(chain: ChainDef) {
     activeChain = chain;
+    pendingClarification = null;
     chainModelOverride = undefined;
     stepModelOverrides.clear();
     stepStates = buildPendingStepStates(chain);
@@ -530,28 +610,49 @@ export default function (pi: ExtensionAPI) {
   async function runChain(
     task: string,
     ctx: any,
-  ): Promise<{ output: string; success: boolean; elapsed: number }> {
+  ): Promise<{
+    output: string;
+    success: boolean;
+    status: "done" | "error" | "needs_clarification";
+    elapsed: number;
+    clarification?: { stepIndex: number; stepAgent: string; questions: string[]; rounds: number; maxRounds: number };
+  }> {
     if (!activeChain) {
-      return { output: "No chain active", success: false, elapsed: 0 };
+      return { output: "No chain active", success: false, status: "error", elapsed: 0 };
     }
 
     const chainStart = Date.now();
+    const resumeState = pendingClarification && pendingClarification.chainName === activeChain.name
+      ? pendingClarification
+      : null;
 
-    // Reset all steps to pending
+    // Clear and rebuild step states for the current run.
     stepStates = buildPendingStepStates(activeChain);
+
+    const startStep = resumeState?.stepIndex ?? 0;
+    for (let i = 0; i < startStep; i++) {
+      stepStates[i].status = "done";
+      stepStates[i].lastWork = "completed earlier";
+    }
+
+    pendingClarification = null;
     updateWidget();
 
-    let input = task;
-    const originalPrompt = task;
+    let input = resumeState
+      ? `${resumeState.inputBeforeStep}\n\nUser clarifications:\n${task}`
+      : task;
+    const originalPrompt = resumeState?.originalPrompt ?? task;
 
-    for (let i = 0; i < activeChain.steps.length; i++) {
+    for (let i = startStep; i < activeChain.steps.length; i++) {
       const step = activeChain.steps[i];
+      const stepInput = input;
       stepStates[i].status = "running";
       updateWidget();
 
-      const resolvedPrompt = step.prompt
-        .replace(/\$INPUT/g, input)
+      const resolvedPromptBase = step.prompt
+        .replace(/\$INPUT/g, stepInput)
         .replace(/\$ORIGINAL/g, originalPrompt);
+      const resolvedPrompt = injectPlannerContract(step, resolvedPromptBase);
 
       const agentDef = allAgents.get(step.agent.toLowerCase());
       if (!agentDef) {
@@ -561,6 +662,7 @@ export default function (pi: ExtensionAPI) {
         return {
           output: `Error at step ${i + 1}: Agent "${step.agent}" not found. Available: ${Array.from(allAgents.keys()).join(", ")}`,
           success: false,
+          status: "error",
           elapsed: Date.now() - chainStart,
         };
       }
@@ -575,17 +677,74 @@ export default function (pi: ExtensionAPI) {
         return {
           output: `Error at step ${i + 1} (${step.agent}): ${result.output}`,
           success: false,
+          status: "error",
           elapsed: Date.now() - chainStart,
+        };
+      }
+
+      const decision = parseChainDecision(result.output);
+      const stepOutput = decision?.cleanedOutput || result.output;
+
+      if (decision?.status === "NEEDS_CLARIFICATION") {
+        const baseRound = resumeState && i === resumeState.stepIndex ? resumeState.rounds : 0;
+        const nextRound = baseRound + 1;
+
+        // Prevent endless clarify loops — continue with assumptions on the final round.
+        if (nextRound > MAX_CLARIFICATION_ROUNDS) {
+          stepStates[i].status = "done";
+          stepStates[i].lastWork = "max clarification rounds reached; proceeding with assumptions";
+          updateWidget();
+          input = stepOutput;
+          continue;
+        }
+
+        const questions = decision.questions.length > 0
+          ? decision.questions
+          : ["Please clarify the requirements for this step so I can proceed safely."];
+
+        stepStates[i].status = "pending";
+        stepStates[i].lastWork = "awaiting clarification";
+        updateWidget();
+
+        pendingClarification = {
+          chainName: activeChain.name,
+          stepIndex: i,
+          inputBeforeStep: stepInput,
+          originalPrompt,
+          rounds: nextRound,
+          questions,
+        };
+
+        const assumptions = decision.assumptions.length > 0
+          ? `\n\nAssumptions if unanswered:\n${decision.assumptions.map((a, idx) => `${idx + 1}. ${a}`).join("\n")}`
+          : "";
+
+        return {
+          output:
+            `Need clarification before continuing (step ${i + 1}: ${displayName(step.agent)}).\n\n` +
+            questions.map((q, idx) => `${idx + 1}. ${q}`).join("\n") +
+            assumptions +
+            `\n\nUse the ask-user-question extension tool (whatever name it is registered under in this session) to ask these, then call run_chain again with the user's answer to continue from this step.`,
+          success: false,
+          status: "needs_clarification",
+          elapsed: Date.now() - chainStart,
+          clarification: {
+            stepIndex: i,
+            stepAgent: step.agent,
+            questions,
+            rounds: nextRound,
+            maxRounds: MAX_CLARIFICATION_ROUNDS,
+          },
         };
       }
 
       stepStates[i].status = "done";
       updateWidget();
 
-      input = result.output;
+      input = stepOutput;
     }
 
-    return { output: input, success: true, elapsed: Date.now() - chainStart };
+    return { output: input, success: true, status: "done", elapsed: Date.now() - chainStart };
   }
 
   function getModelRef(model: any): string {
@@ -606,7 +765,7 @@ export default function (pi: ExtensionAPI) {
   pi.registerTool({
     name: "run_chain",
     label: "Run Chain",
-    description: "Execute the active agent chain pipeline. Each step runs sequentially — output from one step feeds into the next. Agents maintain session context across runs.",
+    description: "Execute the active agent chain pipeline. Steps run sequentially and pass output forward. If a planner step needs clarification, the chain pauses, returns questions, and resumes on the next run_chain call.",
     parameters: Type.Object({
       task: Type.String({ description: "The task/prompt for the chain to process" }),
     }),
@@ -627,7 +786,7 @@ export default function (pi: ExtensionAPI) {
         ? result.output.slice(0, 8000) + "\n\n... [truncated]"
         : result.output;
 
-      const status = result.success ? "done" : "error";
+      const status = result.status;
       const summary = `[chain:${activeChain?.name}] ${status} in ${Math.round(result.elapsed / 1000)}s`;
 
       return {
@@ -638,6 +797,7 @@ export default function (pi: ExtensionAPI) {
           status,
           elapsed: result.elapsed,
           fullOutput: result.output,
+          clarification: result.clarification,
         },
       };
     },
@@ -669,8 +829,10 @@ export default function (pi: ExtensionAPI) {
         );
       }
 
-      const icon = details.status === "done" ? "✓" : "✗";
-      const color = details.status === "done" ? "success" : "error";
+      const icon = details.status === "done" ? "✓"
+        : details.status === "needs_clarification" ? "?" : "✗";
+      const color = details.status === "done" ? "success"
+        : details.status === "needs_clarification" ? "warning" : "error";
       const elapsed = typeof details.elapsed === "number" ? Math.round(details.elapsed / 1000) : 0;
       const header = theme.fg(color, `${icon} ${details.chain}`) +
         theme.fg("dim", ` ${elapsed}s`);
@@ -712,7 +874,8 @@ export default function (pi: ExtensionAPI) {
       ctx.ui.setStatus("agent-chain", `Chain: ${chains[idx].name} (${chains[idx].steps.length} steps)`);
       ctx.ui.notify(
         `Chain: ${chains[idx].name}\n${chains[idx].description}\n${flow}\n\n` +
-        `/chain-model       Set runtime model overrides for steps`,
+        `/chain-model       Set runtime model overrides for steps\n` +
+        `/chain-answer      Answer clarification questions and resume chain`,
         "info",
       );
     },
@@ -817,6 +980,26 @@ export default function (pi: ExtensionAPI) {
     },
   });
 
+  pi.registerCommand("chain-answer", {
+    description: "Answer pending chain clarification questions and resume the chain",
+    handler: async (args, ctx) => {
+      widgetCtx = ctx;
+      if (!pendingClarification || !activeChain) {
+        ctx.ui.notify("No pending clarification. Run run_chain first, then answer when prompted.", "warning");
+        return;
+      }
+
+      const answer = (args || "").trim() || await ctx.ui.input("Clarification answer", "Provide answers to the pending questions");
+      if (!answer) return;
+
+      const result = await runChain(answer, ctx);
+      const color: "info" | "warning" | "error" = result.status === "done" ? "info"
+        : result.status === "needs_clarification" ? "warning"
+          : "error";
+      ctx.ui.notify(result.output, color);
+    },
+  });
+
   // ── System Prompt Override ───────────────────
 
   pi.on("before_agent_start", async (_event, _ctx) => {
@@ -839,6 +1022,14 @@ export default function (pi: ExtensionAPI) {
       const agentDesc = agentDef?.description || "";
       return `${i + 1}. **${displayName(s.agent)}** — ${agentDesc}`;
     }).join("\n");
+
+    const clarificationContext = pendingClarification
+      ? `\n## Pending Clarification\n` +
+      `Chain is paused at step ${pendingClarification.stepIndex + 1} (${displayName(activeChain.steps[pendingClarification.stepIndex]?.agent || "unknown")}).\n` +
+      `Round ${pendingClarification.rounds}/${MAX_CLARIFICATION_ROUNDS}.\n` +
+      `Questions:\n${pendingClarification.questions.map((q, i) => `${i + 1}. ${q}`).join("\n")}\n` +
+      `When user answers, call run_chain with ONLY the user's answer text to resume from the paused step.`
+      : "";
 
     // Build full agent catalog (like agent-team.ts)
     const seen = new Set<string>();
@@ -886,13 +1077,21 @@ ${agentCatalog}
 - Pass a clear task description to run_chain
 - Each step's output feeds into the next step as $INPUT
 - Agents maintain session context — they remember previous work within this session
-- You can run the chain multiple times with different tasks if needed
+- If planner asks clarification questions, chain pauses and returns those questions
+- After the user replies, call run_chain again with their answer to continue from the paused step
+- Chain may ask follow-up clarification questions (up to a capped number of rounds)
 - After the chain completes, review the result and summarize for the user
+
+## Question Asking Policy
+- For any clarification question to the user (inside or outside chain), use the ask-user-question extension tool.
+- Do NOT ask clarification questions as plain assistant text unless that tool is unavailable.
+- When run_chain returns a needs-clarification result, ask those questions via that tool and then resume run_chain with the user's answer.
 
 ## Guidelines
 - Use your judgment — if it's quick, just do it; if it's real work, run the chain
 - Keep chain tasks focused and clearly described
-- You can mix direct work and chain runs in the same conversation`,
+- If chain is waiting for clarification, do NOT continue implementation directly; first gather the user's answers and resume run_chain
+- You can mix direct work and chain runs in the same conversation${clarificationContext ? "\n\n" + clarificationContext : ""}`,
     };
   });
 
@@ -910,6 +1109,7 @@ ${agentCatalog}
     // Reset execution state — widget re-registration deferred to before_agent_start
     stepStates = [];
     activeChain = null;
+    pendingClarification = null;
     chainModelOverride = undefined;
     stepModelOverrides.clear();
     pendingReset = true;
@@ -943,7 +1143,8 @@ ${agentCatalog}
       `Chain: ${activeChain!.name}\n${activeChain!.description}\n${flow}\n\n` +
       `/chain             Switch chain\n` +
       `/chain-list        List all chains\n` +
-      `/chain-model       Set runtime model overrides for steps`,
+      `/chain-model       Set runtime model overrides for steps\n` +
+      `/chain-answer      Answer clarification questions and resume chain`,
       "info",
     );
 
