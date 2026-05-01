@@ -1,8 +1,8 @@
 {
-  "lastChangelogVersion": "0.66.1",
+  "lastChangelogVersion": "0.71.1",
   "defaultThinkingLevel": "medium",
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-sonnet-4-6",
+  "defaultProvider": "openai",
+  "defaultModel": "gpt-5.3-codex",
   "theme": "light",
   "hideThinkingBlock": false,
   "collapseChangelog": false,
@@ -10,7 +10,8 @@
     {
       "source": "git:github.com/tmustier/pi-extensions",
       "extensions": [
-        "usage-extension/index.ts"
+        "usage-extension/index.ts",
+        "+agent-guidance/agent-guidance.ts"
       ]
     }
   ]

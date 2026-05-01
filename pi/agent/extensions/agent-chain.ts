@@ -74,6 +74,10 @@ function shortModel(model: string): string {
   return parts[parts.length - 1];
 }
 
+function formatTokens(value: number): string {
+  return Math.round(value).toLocaleString("en-US");
+}
+
 // ── Shared Helpers ──────────────────────────────
 
 function clean(value?: string): string | undefined {
@@ -258,6 +262,10 @@ export default function (pi: ExtensionAPI) {
   let stepStates: StepState[] = [];
   let pendingReset = false;
 
+  // Runtime model overrides (session-scoped; do not modify YAML/frontmatter)
+  let chainModelOverride: string | undefined;
+  const stepModelOverrides: Map<number, string> = new Map();
+
   function loadChains(cwd: string) {
     sessionDir = join(cwd, ".pi", "agent-sessions");
     if (!existsSync(sessionDir)) {
@@ -284,18 +292,26 @@ export default function (pi: ExtensionAPI) {
     }
   }
 
+  function getEffectiveStepModel(chain: ChainDef, step: ChainStep, stepIndex: number): string | undefined {
+    const agentDef = allAgents.get(step.agent.toLowerCase());
+    return stepModelOverrides.get(stepIndex) ?? chainModelOverride ?? step.model ?? chain.model ?? agentDef?.model;
+  }
+
+  function buildPendingStepStates(chain: ChainDef): StepState[] {
+    return chain.steps.map((s, i) => ({
+      agent: s.agent,
+      status: "pending" as const,
+      elapsed: 0,
+      lastWork: "",
+      model: getEffectiveStepModel(chain, s, i) ?? "",
+    }));
+  }
+
   function activateChain(chain: ChainDef) {
     activeChain = chain;
-    stepStates = chain.steps.map(s => {
-      const agentDef = allAgents.get(s.agent.toLowerCase());
-      return {
-        agent: s.agent,
-        status: "pending" as const,
-        elapsed: 0,
-        lastWork: "",
-        model: s.model ?? chain.model ?? agentDef?.model ?? "",
-      };
-    });
+    chainModelOverride = undefined;
+    stepModelOverrides.clear();
+    stepStates = buildPendingStepStates(chain);
     // Skip widget re-registration if reset is pending — let before_agent_start handle it
     if (!pendingReset) {
       updateWidget();
@@ -522,16 +538,7 @@ export default function (pi: ExtensionAPI) {
     const chainStart = Date.now();
 
     // Reset all steps to pending
-    stepStates = activeChain.steps.map(s => {
-      const agentDef = allAgents.get(s.agent.toLowerCase());
-      return {
-        agent: s.agent,
-        status: "pending" as const,
-        elapsed: 0,
-        lastWork: "",
-        model: s.model ?? activeChain!.model ?? agentDef?.model ?? "",
-      };
-    });
+    stepStates = buildPendingStepStates(activeChain);
     updateWidget();
 
     let input = task;
@@ -558,8 +565,8 @@ export default function (pi: ExtensionAPI) {
         };
       }
 
-      // Priority: per-step YAML > chain-level YAML (agent .md and ctx resolved inside runAgent)
-      const stepModelOverride = step.model ?? activeChain.model;
+      // Priority: runtime step override > runtime chain override > YAML step > YAML chain
+      const stepModelOverride = getEffectiveStepModel(activeChain, step, i);
       const result = await runAgent(agentDef, resolvedPrompt, i, ctx, stepModelOverride);
 
       if (result.exitCode !== 0) {
@@ -579,6 +586,19 @@ export default function (pi: ExtensionAPI) {
     }
 
     return { output: input, success: true, elapsed: Date.now() - chainStart };
+  }
+
+  function getModelRef(model: any): string {
+    return `${model.provider}/${model.id}`;
+  }
+
+  async function selectModelRef(ctx: any, title: string): Promise<string | undefined> {
+    const options = Array.from(new Set(ctx.modelRegistry.getAvailable().map((m: any) => getModelRef(m)))).sort();
+    if (options.length === 0) {
+      ctx.ui.notify("No available models found. Check auth/provider configuration.", "warning");
+      return undefined;
+    }
+    return await ctx.ui.select(title, options);
   }
 
   // ── run_chain Tool ──────────────────────────
@@ -691,7 +711,8 @@ export default function (pi: ExtensionAPI) {
       const flow = chains[idx].steps.map(s => displayName(s.agent)).join(" → ");
       ctx.ui.setStatus("agent-chain", `Chain: ${chains[idx].name} (${chains[idx].steps.length} steps)`);
       ctx.ui.notify(
-        `Chain: ${chains[idx].name}\n${chains[idx].description}\n${flow}`,
+        `Chain: ${chains[idx].name}\n${chains[idx].description}\n${flow}\n\n` +
+        `/chain-model       Set runtime model overrides for steps`,
         "info",
       );
     },
@@ -718,6 +739,84 @@ export default function (pi: ExtensionAPI) {
     },
   });
 
+  pi.registerCommand("chain-model", {
+    description: "Set runtime model overrides for chain steps (without editing YAML)",
+    handler: async (args, ctx) => {
+      widgetCtx = ctx;
+      if (!activeChain) {
+        ctx.ui.notify("No active chain. Use /chain first.", "warning");
+        return;
+      }
+
+      const renderCurrent = () => activeChain!.steps.map((s, i) => {
+        const source = stepModelOverrides.has(i) ? "step" : chainModelOverride ? "chain" : "default";
+        const model = getEffectiveStepModel(activeChain!, s, i) || "(inherits runtime/default)";
+        return `${i + 1}. ${displayName(s.agent)} — ${model} [${source}]`;
+      }).join("\n");
+
+      const tokens = (args || "").trim().split(/\s+/).filter(Boolean);
+      if (tokens.length === 0 || tokens[0] === "list") {
+        ctx.ui.notify(
+          `Current chain model mappings:\n${renderCurrent()}\n\n` +
+          `Usage:\n` +
+          `/chain-model <stepIndex> <provider/model>\n` +
+          `/chain-model <stepIndex>              (interactive picker)\n` +
+          `/chain-model all <provider/model>     (set chain-wide override)\n` +
+          `/chain-model all                      (interactive picker)\n` +
+          `/chain-model reset                    (clear all runtime overrides)\n` +
+          `/chain-model <stepIndex> reset        (clear one step override)`,
+          "info",
+        );
+        return;
+      }
+
+      if (tokens[0] === "reset") {
+        chainModelOverride = undefined;
+        stepModelOverrides.clear();
+        stepStates = buildPendingStepStates(activeChain);
+        updateWidget();
+        ctx.ui.notify("Cleared all runtime chain model overrides.", "info");
+        return;
+      }
+
+      if (tokens[0] === "all") {
+        const modelRef = tokens[1] || await selectModelRef(ctx, "Select model for all chain steps");
+        if (!modelRef) return;
+        chainModelOverride = modelRef;
+        stepModelOverrides.clear();
+        stepStates = buildPendingStepStates(activeChain);
+        updateWidget();
+        ctx.ui.notify(`Chain-wide model override set to ${modelRef}.`, "info");
+        return;
+      }
+
+      const stepIndex = Number.parseInt(tokens[0], 10) - 1;
+      if (!Number.isFinite(stepIndex) || stepIndex < 0 || stepIndex >= activeChain.steps.length) {
+        ctx.ui.notify(`Invalid step index \"${tokens[0]}\". Valid range: 1-${activeChain.steps.length}`, "error");
+        return;
+      }
+
+      if (tokens[1] === "reset") {
+        stepModelOverrides.delete(stepIndex);
+        stepStates = buildPendingStepStates(activeChain);
+        updateWidget();
+        ctx.ui.notify(`Cleared runtime override for step ${stepIndex + 1}.`, "info");
+        return;
+      }
+
+      const modelRef = tokens[1] || await selectModelRef(ctx, `Select model for step ${stepIndex + 1} (${displayName(activeChain.steps[stepIndex].agent)})`);
+      if (!modelRef) return;
+
+      stepModelOverrides.set(stepIndex, modelRef);
+      stepStates = buildPendingStepStates(activeChain);
+      updateWidget();
+      ctx.ui.notify(
+        `Set step ${stepIndex + 1} (${displayName(activeChain.steps[stepIndex].agent)}) model to ${modelRef}.`,
+        "info",
+      );
+    },
+  });
+
   // ── System Prompt Override ───────────────────
 
   pi.on("before_agent_start", async (_event, _ctx) => {
@@ -725,16 +824,7 @@ export default function (pi: ExtensionAPI) {
     if (pendingReset && activeChain) {
       pendingReset = false;
       widgetCtx = _ctx;
-      stepStates = activeChain.steps.map(s => {
-        const agentDef = allAgents.get(s.agent.toLowerCase());
-        return {
-          agent: s.agent,
-          status: "pending" as const,
-          elapsed: 0,
-          lastWork: "",
-          model: s.model ?? activeChain!.model ?? agentDef?.model ?? "",
-        };
-      });
+      stepStates = buildPendingStepStates(activeChain);
       updateWidget();
     }
 
@@ -759,11 +849,11 @@ export default function (pi: ExtensionAPI) {
         seen.add(key);
         return true;
       })
-      .map(s => {
+      .map((s, i) => {
         const agentDef = allAgents.get(s.agent.toLowerCase());
         if (!agentDef) return `### ${displayName(s.agent)}\nAgent not found.`;
-        // Reflect the effective model priority: per-step YAML > chain-level YAML > agent .md frontmatter
-        const effectiveModel = s.model ?? activeChain!.model ?? agentDef.model;
+        // Reflect the effective model priority, including runtime overrides
+        const effectiveModel = getEffectiveStepModel(activeChain!, s, i) || agentDef.model;
         const modelLine = effectiveModel ? `\n**Model:** ${effectiveModel}` : "";
         return `### ${displayName(agentDef.name)}\n${agentDef.description}\n**Tools:** ${agentDef.tools}${modelLine}\n**Role:** ${agentDef.systemPrompt}`;
       })
@@ -820,6 +910,8 @@ ${agentCatalog}
     // Reset execution state — widget re-registration deferred to before_agent_start
     stepStates = [];
     activeChain = null;
+    chainModelOverride = undefined;
+    stepModelOverrides.clear();
     pendingReset = true;
 
     // Wipe chain session files — reset agent context on /new and launch
@@ -850,7 +942,8 @@ ${agentCatalog}
     _ctx.ui.notify(
       `Chain: ${activeChain!.name}\n${activeChain!.description}\n${flow}\n\n` +
       `/chain             Switch chain\n` +
-      `/chain-list        List all chains`,
+      `/chain-list        List all chains\n` +
+      `/chain-model       Set runtime model overrides for steps`,
       "info",
     );
 
@@ -861,9 +954,39 @@ ${agentCatalog}
       render(width: number): string[] {
         const model = _ctx.model?.id || "no-model";
         const usage = _ctx.getContextUsage();
-        const pct = usage ? usage.percent : 0;
-        const filled = Math.round(pct / 10);
+
+        const pctRaw = usage?.percent;
+        const pct = typeof pctRaw === "number"
+          ? Math.max(0, Math.min(100, pctRaw))
+          : null;
+        const filled = Math.round((pct ?? 0) / 10);
         const bar = "#".repeat(filled) + "-".repeat(10 - filled);
+
+        const usageColor = pct === null
+          ? "dim"
+          : pct >= 90
+            ? "error"
+            : pct >= 75
+              ? "warning"
+              : "success";
+
+        const pctLabel = pct === null ? "--%" : `${Math.round(pct)}%`;
+
+        const tokens = usage?.tokens;
+        const contextWindow = usage?.contextWindow;
+        const tokensKnown = tokens !== null && tokens !== undefined;
+        const contextKnown = contextWindow !== null && contextWindow !== undefined;
+        const remaining = tokensKnown && contextKnown
+          ? Math.max(0, contextWindow - tokens)
+          : null;
+
+        const ctxLabel = tokensKnown && contextKnown && remaining !== null
+          ? `ctx ${formatTokens(tokens)}/${formatTokens(contextWindow)} tok · rem ${formatTokens(remaining)} tok`
+          : "ctx ?/? tok";
+
+        const compactHint = pct !== null && pct >= 85
+          ? theme.fg("warning", " · /compact soon")
+          : "";
 
         const chainLabel = activeChain
           ? theme.fg("accent", activeChain.name)
@@ -872,7 +995,11 @@ ${agentCatalog}
         const left = theme.fg("dim", ` ${model}`) +
           theme.fg("muted", " · ") +
           chainLabel;
-        const right = theme.fg("dim", `[${bar}] ${Math.round(pct)}% `);
+        const right =
+          theme.fg(usageColor, `[${bar}] ${pctLabel}`) +
+          theme.fg("dim", ` · ${ctxLabel}`) +
+          compactHint +
+          " ";
         const pad = " ".repeat(Math.max(1, width - visibleWidth(left) - visibleWidth(right)));
 
         return [truncateToWidth(left + pad + right, width)];
